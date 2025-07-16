@@ -11,3 +11,7 @@ body {
 body > div {
 	@apply container;
 }
+
+section {
+	@apply max-w-[750px];
+}
