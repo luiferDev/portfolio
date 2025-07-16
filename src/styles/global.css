@@ -1,1 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+p {
+	@apply text-gray-300 pb-4;
+}
+
+body {
+	@apply grid place-content-center;
+}
+
+body > div {
+	@apply container;
+}
