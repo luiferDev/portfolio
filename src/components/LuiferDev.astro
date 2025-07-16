@@ -1,5 +1,8 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { Image } from 'astro:assets';
+
+import luiferdev from '../../public/luiferdev.jpg';
 ---
 
 <section class="flex flex-row justify-between gap-16 mt-9">
@@ -21,6 +24,7 @@ import { Icon } from 'astro-icon/components';
 				href="https://github.com/luiferDev"
 				target="_blank"
 				rel="noopener noreferrer"
+				aria-label="GitHub Profile"
 			>
 				<Icon
 					name="mdi:github"
@@ -31,6 +35,7 @@ import { Icon } from 'astro-icon/components';
 				href="https://www.linkedin.com/in/jorge-morales-cruz/"
 				target="_blank"
 				rel="noopener noreferrer"
+				aria-label="LinkedIn Profile"
 			>
 				<Icon
 					name="mdi:linkedin"
@@ -43,10 +48,10 @@ import { Icon } from 'astro-icon/components';
 			/>
 		</div>
 	</div>
-	<img
-		class="rounded-lg aspect-video"
-		src="luiferdev.jpg"
-		width="160px"
+	<Image
+		class="rounded-lg aspect-video w-[160px]"
+		src={luiferdev}
 		alt="Jorge Luis Morales Cruz"
+		loading="eager"
 	/>
 </section>
