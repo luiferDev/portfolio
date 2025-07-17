@@ -8,9 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@iconify-json/devicon':
+        specifier: ^1.2.31
+        version: 1.2.31
+      '@iconify-json/devicon-plain':
+        specifier: ^1.2.30
+        version: 1.2.30
       '@iconify-json/mdi':
         specifier: ^1.2.3
         version: 1.2.3
+      '@iconify-json/simple-icons':
+        specifier: ^1.2.43
+        version: 1.2.43
       '@tailwindcss/vite':
         specifier: ^4.1.11
         version: 4.1.11(vite@6.3.5(@types/node@24.0.14)(jiti@2.4.2)(lightningcss@1.30.1))
@@ -232,8 +241,17 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@iconify-json/devicon-plain@1.2.30':
+    resolution: {integrity: sha512-d2bnTmk7YeJ0SBnQGyWV0iVafKt8F4ZvqT33oiCZrYcUqKP/SRW2IvIlH75YsNbJ2L+uKIozZIS7b3kLN5DBOQ==}
+
+  '@iconify-json/devicon@1.2.31':
+    resolution: {integrity: sha512-rJKKYzPgO5aYrUPY4DZpcNJ3QxmnO8PwM4kSGuPMygPhDvl94iAoKiQtt3jE+uOM4mQOxxW1Jtspz3rGjJyxYg==}
+
   '@iconify-json/mdi@1.2.3':
     resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
+
+  '@iconify-json/simple-icons@1.2.43':
+    resolution: {integrity: sha512-JERgKGFRfZdyjGyTvVBVW5rftahy9tNUX+P+0QUnbaAEWvEMexXHE9863YVMVrIRhoj/HybGsibg8ZWieo/NDg==}
 
   '@iconify/tools@4.1.2':
     resolution: {integrity: sha512-q6NzLQYEN9zkDfcyBqD3vItHcZw97w/s++3H3TBxUORr57EfHxj6tOW6fyufDjMq+Vl56WXWaPx1csBPYlI5CA==}
@@ -2175,7 +2193,19 @@ snapshots:
   '@esbuild/win32-x64@0.25.6':
     optional: true
 
+  '@iconify-json/devicon-plain@1.2.30':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/devicon@1.2.31':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/mdi@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/simple-icons@1.2.43':
     dependencies:
       '@iconify/types': 2.0.0
 
