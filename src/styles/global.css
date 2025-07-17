@@ -13,5 +13,5 @@ body > div {
 }
 
 section {
-	@apply max-w-[750px];
+	@apply max-w-[750px] mt-12;
 }
