@@ -1,0 +1,169 @@
+---
+import { Icon } from 'astro-icon/components';
+
+const frontendSkills = [
+	{
+		name: 'React',
+		icon: 'mdi:react',
+	},
+	{
+		name: 'Astro',
+		icon: 'simple-icons:astro',
+	},
+	{
+		name: 'Tailwind',
+		icon: 'mdi:tailwind',
+	},
+	{
+		name: 'JavaScript',
+		icon: 'mdi:language-javascript',
+	},
+	{
+		name: 'TypeScript',
+		icon: 'mdi:language-typescript',
+	},
+];
+
+const backendSkills = [
+	{
+		name: '.NET',
+		icon: 'mdi:dot-net',
+	},
+	{
+		name: 'Node JS',
+		icon: 'mdi:nodejs',
+	},
+	{
+		name: 'Java',
+		icon: 'mdi:language-java',
+	},
+	{
+		name: 'Spring',
+		icon: 'simple-icons:spring',
+	},
+	{
+		name: 'SQL',
+		icon: 'mdi:database',
+	},
+	{
+		name: 'MongoDB',
+		icon: 'simple-icons:mongodb',
+	},
+	{
+		name: 'Docker',
+		icon: 'mdi:docker',
+	},
+	{
+		name: 'Kubernetes',
+		icon: 'mdi:kubernetes',
+	},
+];
+
+const testingSkills = [
+	{
+		name: 'Python',
+		icon: 'mdi:language-python',
+	},
+	{
+		name: 'Selenium',
+		icon: 'simple-icons:selenium',
+	},
+	{
+		name: 'Cypress',
+		icon: 'simple-icons:cypress',
+	},
+	{
+		name: 'Playwright',
+		icon: 'devicon-plain:playwright',
+	},
+	{
+		name: 'Postman',
+		icon: 'devicon-plain:postman',
+	},
+	{
+		name: 'Insomnia',
+		icon: 'devicon-plain:insomnia',
+	},
+];
+
+const toolsSkills = [
+	{
+		name: 'Git',
+		icon: 'mdi:git',
+	},
+	{
+		name: 'GitHub',
+		icon: 'mdi:github',
+	},
+	{
+		name: 'Jira',
+		icon: 'mdi:jira',
+	},
+	{
+		name: 'Trello',
+		icon: 'mdi:trello',
+	},
+];
+---
+
+<section class="mb-12">
+	<article>
+		<h2 class="text-2xl mb-4">Skills</h2>
+		
+		<div class="mb-6">
+			<h3 class="text-xl mb-2">Frontend</h3>
+			<div class="grid grid-cols-5 md:grid-cols-7 gap-2">
+				{
+					frontendSkills.map((skill) => (
+						<div class="flex flex-col items-center text-center p-2 bg-[#581a21] rounded-lg hover:bg-[#93565d] transition-colors">
+							<Icon name={skill.icon} class="text-3xl mb-1" />
+							<span class="text-sm">{skill.name}</span>
+						</div>
+					))
+				}
+			</div>
+		</div>
+		
+		<div class="mb-6">
+			<h3 class="text-xl mb-2">Backend</h3>
+			<div class="grid grid-cols-5 md:grid-cols-7 gap-2">
+				{
+					backendSkills.map((skill) => (
+						<div class="flex flex-col items-center text-center p-2 bg-[#581a21] rounded-lg hover:bg-[#93565d] transition-colors">
+							<Icon name={skill.icon} class="text-3xl mb-1" />
+							<span class="text-sm">{skill.name}</span>
+						</div>
+					))
+				}
+			</div>
+		</div>
+		
+		<div class="mb-6">
+			<h3 class="text-xl mb-2">Testing</h3>
+			<div class="grid grid-cols-5 md:grid-cols-7 gap-2">
+				{
+					testingSkills.map((skill) => (
+						<div class="flex flex-col items-center text-center p-2 bg-[#581a21] rounded-lg hover:bg-[#93565d] transition-colors">
+							<Icon name={skill.icon} class="text-3xl mb-1" />
+							<span class="text-sm">{skill.name}</span>
+						</div>
+					))
+				}
+			</div>
+		</div>
+		
+		<div class="mb-6">
+			<h3 class="text-xl mb-2">Tools</h3>
+			<div class="grid grid-cols-5 md:grid-cols-7 gap-2">
+				{
+					toolsSkills.map((skill) => (
+						<div class="flex flex-col items-center text-center p-2 bg-[#581a21] rounded-lg hover:bg-[#93565d] transition-colors">
+							<Icon name={skill.icon} class="text-3xl mb-1" />
+							<span class="text-sm">{skill.name}</span>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</article>
+</section>
