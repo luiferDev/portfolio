@@ -1,23 +1,23 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import LuiferDev from '../components/LuiferDev.astro';
-import About from '../components/About.astro';
-import Experience from '../components/Experience.astro';
-import Education from '../components/Education.astro';
-import Projects from '../components/Projects.astro';
-import Certifications from '../components/Certifications.astro';
-import Skills from '../components/Skills.astro';
-import Footer from '../components/Footer.astro';
+import Layout from '../app/layout/Layout.astro';
+import LuiferDev from '../entities/profile/LuiferDev.astro';
+import AboutSection from '../widgets/about/AboutSection.astro';
+import ExperienceSection from '../widgets/experience/ExperienceSection.astro';
+import EducationSection from '../widgets/education/EducationSection.astro';
+import ProjectsSection from '../widgets/projects/ProjectsSection.astro';
+import CertificationsSection from '../widgets/certifications/CertificationsSection.astro';
+import SkillsSection from '../widgets/skills/SkillsSection.astro';
+import Footer from '../widgets/footer/Footer.astro';
 ---
 
 <Layout title="Resume LuiferDev">
 	<div id="hero"><LuiferDev /></div>
-	<div id="skills"><Skills /></div>
-	<div id="about"><About /></div>
-	<div id="experience"><Experience /></div>
-	<div id="education"><Education /></div>
-	<div id="projects"><Projects /></div>
-	<div id="certifications"><Certifications /></div>
+	<div id="skills"><SkillsSection /></div>
+	<div id="about"><AboutSection /></div>
+	<div id="experience"><ExperienceSection /></div>
+	<div id="education"><EducationSection /></div>
+	<div id="projects"><ProjectsSection /></div>
+	<div id="certifications"><CertificationsSection /></div>
 	<Footer />
 </Layout>
 

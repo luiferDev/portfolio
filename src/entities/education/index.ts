@@ -1,0 +1,2 @@
+// Education entity exports
+export {};

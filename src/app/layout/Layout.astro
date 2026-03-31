@@ -1,8 +1,8 @@
 ---
-import '../styles/global.css';
-import Navbar from '../components/Navbar.astro';
-import { ClientRouter } from 'astro:transitions';
-import { languages, defaultLang } from '../i18n/config';
+import '../../shared/styles/global.css';
+import Navbar from '../../widgets/navbar/Navbar.astro';
+//import { ClientRouter } from 'astro:transitions';
+import { languages, defaultLang } from '../../shared/config/i18n';
 
 interface Props {
 	title?: string;

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import ProjectCard from './ProjectCard.astro';
-import { useTranslations } from '../i18n/config';
+import ProjectCard from '../../entities/project/ProjectCard.astro';
+import { useTranslations } from '../../shared/config/i18n';
 
 interface Props {
   locale?: string;

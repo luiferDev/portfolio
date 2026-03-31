@@ -1,13 +1,13 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import LuiferDev from '../../components/LuiferDev.astro';
-import About from '../../components/About.astro';
-import Experience from '../../components/Experience.astro';
-import Education from '../../components/Education.astro';
-import Projects from '../../components/Projects.astro';
-import Certifications from '../../components/Certifications.astro';
-import Skills from '../../components/Skills.astro';
-import Footer from '../../components/Footer.astro';
+import Layout from '../../app/layout/Layout.astro';
+import LuiferDev from '../../entities/profile/LuiferDev.astro';
+import AboutSection from '../../widgets/about/AboutSection.astro';
+import ExperienceSection from '../../widgets/experience/ExperienceSection.astro';
+import EducationSection from '../../widgets/education/EducationSection.astro';
+import ProjectsSection from '../../widgets/projects/ProjectsSection.astro';
+import CertificationsSection from '../../widgets/certifications/CertificationsSection.astro';
+import SkillsSection from '../../widgets/skills/SkillsSection.astro';
+import Footer from '../../widgets/footer/Footer.astro';
 
 export function getStaticPaths() {
   return [
@@ -21,12 +21,12 @@ const { locale } = Astro.params;
 
 <Layout locale={locale}>
 	<div id="hero"><LuiferDev locale={locale} /></div>
-	<div id="skills"><Skills locale={locale} /></div>
-	<div id="about"><About locale={locale} /></div>
-	<div id="experience"><Experience locale={locale} /></div>
-	<div id="education"><Education locale={locale} /></div>
-	<div id="projects"><Projects locale={locale} /></div>
-	<div id="certifications"><Certifications locale={locale} /></div>
+	<div id="skills"><SkillsSection locale={locale} /></div>
+	<div id="about"><AboutSection locale={locale} /></div>
+	<div id="experience"><ExperienceSection locale={locale} /></div>
+	<div id="education"><EducationSection locale={locale} /></div>
+	<div id="projects"><ProjectsSection locale={locale} /></div>
+	<div id="certifications"><CertificationsSection locale={locale} /></div>
 	<Footer locale={locale} />
 </Layout>
 

@@ -1,7 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
-import LanguageSwitcher from './LanguageSwitcher.astro';
-import { getLangFromUrl, useTranslations, defaultLang } from '../i18n/config';
+import LanguageSwitcher from '../../features/language-switcher/LanguageSwitcher.astro';
+import { getLangFromUrl, useTranslations, defaultLang } from '../../shared/config/i18n';
 
 interface Props {
   locale?: string;

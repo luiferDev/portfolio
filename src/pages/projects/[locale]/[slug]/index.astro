@@ -1,8 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../../../layouts/Layout.astro';
+import Layout from '../../../../app/layout/Layout.astro';
 import { Icon } from 'astro-icon/components';
-import { useTranslations } from '../../../../i18n/config';
+import { useTranslations } from '../../../../shared/config/i18n';
 
 export async function getStaticPaths() {
 	const allProjects = await getCollection('projects');
