@@ -1,0 +1,30 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#222"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#93565d"/>
+      <stop offset="100%" style="stop-color:#581a21"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Background orbs -->
+  <circle cx="100" cy="100" r="200" fill="#93565d" opacity="0.1"/>
+  <circle cx="1100" cy="530" r="250" fill="#93565d" opacity="0.1"/>
+  
+  <!-- Content -->
+  <text x="600" y="250" font-family="Space Grotesk, sans-serif" font-size="80" font-weight="bold" fill="white" text-anchor="middle">LuiferDev</text>
+  
+  <text x="600" y="330" font-family="Inter, sans-serif" font-size="32" fill="#93565d" text-anchor="middle">Full Stack Developer</text>
+  
+  <text x="600" y="400" font-family="Inter, sans-serif" font-size="24" fill="#9ca3af" text-anchor="middle">React • TypeScript • .NET • Java</text>
+  
+  <!-- Decorative line -->
+  <rect x="400" y="450" width="400" height="3" fill="url(#accent)" rx="2"/>
+  
+  <text x="600" y="520" font-family="Inter, sans-serif" font-size="18" fill="#6b7280" text-anchor="middle">luiferdev.com</text>
+</svg>
