@@ -7,17 +7,50 @@ import Education from '../components/Education.astro';
 import Projects from '../components/Projects.astro';
 import Certifications from '../components/Certifications.astro';
 import Skills from '../components/Skills.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Footer from '../components/Footer.astro';
 ---
 
 <Layout title="Resume LuiferDev">
-	<LuiferDev />
-	<About />
-	<Experience />
-	<Education />
-	<Projects />
-	<Certifications />
-	<Skills />
+	<div id="hero"><LuiferDev /></div>
+	<div id="skills"><Skills /></div>
+	<div id="about"><About /></div>
+	<div id="experience"><Experience /></div>
+	<div id="education"><Education /></div>
+	<div id="projects"><Projects /></div>
+	<div id="certifications"><Certifications /></div>
+	<Footer />
 </Layout>
+
+<script is:inline>
+  function initScrollAnimations() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initScrollAnimations, 100);
+      return;
+    }
+    
+    gsap.registerPlugin(ScrollTrigger);
+    
+    const sections = document.querySelectorAll('#about, #experience, #education, #projects, #certifications');
+    
+    sections.forEach((section, index) => {
+      gsap.from(section, {
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 25,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        delay: index * 0.05
+      });
+    });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollAnimations);
+  } else {
+    initScrollAnimations();
+  }
+</script>
