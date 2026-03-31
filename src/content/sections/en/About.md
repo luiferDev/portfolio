@@ -1,5 +1,5 @@
 ---
-title: About me
+title: About Me
 ---
 
 I'm a passionate fullstack developer with a strong focus on QA testing

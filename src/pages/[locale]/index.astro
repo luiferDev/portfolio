@@ -1,0 +1,65 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import LuiferDev from '../../components/LuiferDev.astro';
+import About from '../../components/About.astro';
+import Experience from '../../components/Experience.astro';
+import Education from '../../components/Education.astro';
+import Projects from '../../components/Projects.astro';
+import Certifications from '../../components/Certifications.astro';
+import Skills from '../../components/Skills.astro';
+import Footer from '../../components/Footer.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { locale: 'en' } },
+    { params: { locale: 'fr' } },
+  ];
+}
+
+const { locale } = Astro.params;
+---
+
+<Layout locale={locale}>
+	<div id="hero"><LuiferDev locale={locale} /></div>
+	<div id="skills"><Skills locale={locale} /></div>
+	<div id="about"><About locale={locale} /></div>
+	<div id="experience"><Experience locale={locale} /></div>
+	<div id="education"><Education locale={locale} /></div>
+	<div id="projects"><Projects locale={locale} /></div>
+	<div id="certifications"><Certifications locale={locale} /></div>
+	<Footer locale={locale} />
+</Layout>
+
+<script is:inline>
+  function initScrollAnimations() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initScrollAnimations, 100);
+      return;
+    }
+    
+    gsap.registerPlugin(ScrollTrigger);
+    
+    const sections = document.querySelectorAll('#about, #experience, #education, #projects, #certifications');
+    
+    sections.forEach((section, index) => {
+      gsap.from(section, {
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
+        },
+        y: 25,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        delay: index * 0.05
+      });
+    });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollAnimations);
+  } else {
+    initScrollAnimations();
+  }
+</script>

@@ -1,29 +1,65 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../../layouts/Layout.astro';
 import { Icon } from 'astro-icon/components';
+import { useTranslations } from '../../../../i18n/config';
 
 export async function getStaticPaths() {
-	const projects = await getCollection('projects');
-	return projects.map((project) => ({
-		params: { slug: project.id },
-		props: { project },
-	}));
+	const allProjects = await getCollection('projects');
+	
+	// Generate paths: /projects/[locale]/[slug]
+	const paths = [];
+	for (const project of allProjects) {
+		const locale = project.id.split('/')[0];
+		const slug = project.id.split('/')[1];
+		
+		paths.push({ 
+			params: { locale, slug },
+			props: { projectId: project.id, locale } 
+		});
+	}
+	
+	return paths;
 }
 
-const { project } = Astro.props;
+// Get project from props
+const { projectId, locale } = Astro.props as { projectId: string; locale: string };
+
+// Get the project data
+const allProjects = await getCollection('projects');
+const project = allProjects.find(p => p.id === projectId);
+
+if (!project) {
+	return Astro.redirect('/');
+}
+
 const { data } = project;
-const { title, description, fullDescription, image, technologies, features, status, year, link, github, frontend, backend } = data;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
+
+const { 
+	image, 
+	technologies, 
+	status, 
+	year, 
+	link, 
+	github, 
+	frontend, 
+	backend,
+	title,
+	description,
+	fullDescription,
+	features
+} = data;
 ---
 
-<Layout title={`${title} | Projects`}>
+<Layout locale={locale} title={`${title} | ${t.nav.projects}`}>
 	<main class="max-w-4xl mx-auto px-6 py-12">
 		<a
-			href="/#projects"
+			href={locale === 'es' ? '/' : `/${locale}/`}
 			class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
 		>
 			<Icon name="mdi:arrow-left" class="w-5 h-5" />
-			<span>Back to Projects</span>
+			<span>{t.projects.back || 'Back to Projects'}</span>
 		</a>
 
 		<article class="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden">
@@ -40,7 +76,7 @@ const { title, description, fullDescription, image, technologies, features, stat
 						status === 'InProgress' ? 'bg-yellow-500/20 text-yellow-400' :
 						'bg-blue-500/20 text-blue-400'
 					}`}>
-						{status}
+						{status === 'Completed' ? t.projects.completed : status === 'InProgress' ? t.projects.inProgress : status}
 					</span>
 				</div>
 			</div>
@@ -54,7 +90,7 @@ const { title, description, fullDescription, image, technologies, features, stat
 				<p class="text-gray-300 text-lg mb-8">{fullDescription}</p>
 
 				<div class="mb-8">
-					<h2 class="text-xl font-semibold mb-4">Technologies</h2>
+					<h2 class="text-xl font-semibold mb-4">{t.projects.technologies}</h2>
 					<div class="flex flex-wrap gap-2">
 						{technologies.map((tech) => (
 							<span class="px-3 py-1.5 bg-[#93565d]/20 text-[#93565d] rounded-lg text-sm">
@@ -66,7 +102,7 @@ const { title, description, fullDescription, image, technologies, features, stat
 
 				{(frontend || backend) && (
 					<div class="mb-8">
-						<h2 class="text-xl font-semibold mb-4">Stack</h2>
+						<h2 class="text-xl font-semibold mb-4">{t.projects.stack}</h2>
 						<div class="flex flex-wrap gap-4">
 							{frontend && (
 								<div class="flex items-center gap-2 text-gray-300">
@@ -84,9 +120,9 @@ const { title, description, fullDescription, image, technologies, features, stat
 					</div>
 				)}
 
-				{features.length > 0 && (
+				{features && features.length > 0 && (
 					<div class="mb-8">
-						<h2 class="text-xl font-semibold mb-4">Features</h2>
+						<h2 class="text-xl font-semibold mb-4">{t.projects.features}</h2>
 						<ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 							{features.map((feature) => (
 								<li class="flex items-center gap-2 text-gray-300">
@@ -107,7 +143,7 @@ const { title, description, fullDescription, image, technologies, features, stat
 							class="inline-flex items-center gap-2 px-6 py-3 bg-[#93565d] hover:bg-[#7a4550] rounded-lg transition-colors"
 						>
 							<Icon name="mdi:web" class="w-5 h-5" />
-							<span>Live Demo</span>
+							<span>{t.projects.live}</span>
 						</a>
 					)}
 					{github && (
@@ -118,7 +154,7 @@ const { title, description, fullDescription, image, technologies, features, stat
 							class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
 						>
 							<Icon name="mdi:github" class="w-5 h-5" />
-							<span>View Code</span>
+							<span>{t.projects.code}</span>
 						</a>
 					)}
 				</div>

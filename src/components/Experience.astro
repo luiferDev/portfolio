@@ -1,7 +1,17 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { useTranslations } from '../i18n/config';
 
-const experiences = await getCollection('experiences');
+interface Props {
+  locale?: string;
+}
+
+const { locale = 'es' } = Astro.props;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
+
+// Get locale-specific experiences
+const allExperiences = await getCollection('experiences');
+const experiences = allExperiences.filter(exp => exp.id.startsWith(locale + '/'));
 
 // Sort experiences by date (most recent first)
 const sortedExperiences = [...experiences].sort((a, b) => {
@@ -12,7 +22,7 @@ const sortedExperiences = [...experiences].sort((a, b) => {
 ---
 
 <section aria-label="experience section of my resume" class="experience max-w-[750px] mx-auto" id="experience">
-	<h2 class="section-title">Experience</h2>
+	<h2 class="section-title">{t.experience.title}</h2>
 	
 	<div class="timeline">
 		<div class="timeline-track">

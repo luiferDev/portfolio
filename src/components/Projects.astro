@@ -1,13 +1,23 @@
 ---
 import { getCollection } from 'astro:content';
 import ProjectCard from './ProjectCard.astro';
+import { useTranslations } from '../i18n/config';
 
-const projects = await getCollection('projects');
+interface Props {
+  locale?: string;
+}
+
+const { locale = 'es' } = Astro.props;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
+
+// Get locale-specific projects
+const allProjects = await getCollection('projects');
+const projects = allProjects.filter(project => project.id.startsWith(locale + '/'));
 ---
 
 <section id="projects" class="max-w-[750px] mx-auto mt-12">
 	<article>
-		<h2 class="section-title">Projects</h2>
+		<h2 class="section-title">{t.projects.title}</h2>
 		{projects.length === 0 ? (
 			<p class="text-gray-400">No projects found</p>
 		) : (
@@ -15,9 +25,12 @@ const projects = await getCollection('projects');
 				{
 					projects.map((project, index) => {
 						const { data, id } = project;
+						const slug = id.split('/')[1]; // Remove locale prefix
 						return (
 							<ProjectCard
 								id={id}
+								slug={slug}
+								locale={locale}
 								title={data.title}
 								description={data.description}
 								image={data.image}
@@ -25,6 +38,7 @@ const projects = await getCollection('projects');
 								link={data.link}
 								github={data.github}
 								index={index}
+								t={t.projects}
 							/>
 						);
 					})

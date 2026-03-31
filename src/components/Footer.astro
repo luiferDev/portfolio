@@ -1,4 +1,13 @@
 ---
+import { useTranslations } from '../i18n/config';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale = 'es' } = Astro.props;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
+
 const currentYear = new Date().getFullYear();
 ---
 
@@ -6,14 +15,14 @@ const currentYear = new Date().getFullYear();
 	<div class="footer-content">
 		<div class="footer-brand">
 			<span class="footer-logo">LuiferDev</span>
-			<p class="footer-tagline">Building digital experiences with code and creativity</p>
+			<p class="footer-tagline">{t.footer.tagline}</p>
 		</div>
 		
 		<div class="footer-links">
-			<a href="#about">About</a>
-			<a href="#experience">Experience</a>
-			<a href="#projects">Projects</a>
-			<a href="#skills">Skills</a>
+			<a href="#about">{t.nav.about}</a>
+			<a href="#experience">{t.nav.experience}</a>
+			<a href="#projects">{t.nav.projects}</a>
+			<a href="#skills">{t.skills.title}</a>
 		</div>
 		
 		<div class="footer-social">
@@ -36,7 +45,7 @@ const currentYear = new Date().getFullYear();
 		</div>
 		
 		<div class="footer-bottom">
-			<p>&copy; {currentYear} LuiferDev. All rights reserved.</p>
+			<p>&copy; {currentYear} LuiferDev. {t.footer.rights}</p>
 		</div>
 	</div>
 </footer>

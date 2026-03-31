@@ -1,4 +1,13 @@
 ---
+import { useTranslations } from '../i18n/config';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale = 'es' } = Astro.props;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
+
 interface Certification {
 	title: string;
 	issuer: string;
@@ -9,19 +18,19 @@ interface Certification {
 
 const certifications: Certification[] = [
 	{
-		title: 'Java Backend Developer',
+		title: t.certs.java,
 		issuer: 'Alura Latam & Oracle ONE',
 		date: 'Jun 2024',
 		icon: 'mdi:language-java',
 	},
 	{
-		title: 'Scrum Foundational Certification',
+		title: t.certs.scrum,
 		issuer: 'Certiprof',
 		date: 'Aug 2023',
 		icon: 'mdi:scrumboard',
 	},
 	{
-		title: 'Data Analyst',
+		title: t.certs.data,
 		issuer: 'Correlation One',
 		date: 'Oct 2022',
 		icon: 'mdi:chart-box',
@@ -29,8 +38,8 @@ const certifications: Certification[] = [
 ];
 ---
 
-<section class="max-w-6xl mx-auto" aria-label="certifications">
-	<h2 class="section-title">Certifications</h2>
+<section class="max-w-[750px] mx-auto">
+	<h2 class="section-title">{t.certifications.title}</h2>
 	<div class="certifications-grid">
 		{certifications.map((cert, index) => (
 			<article class="cert-card" data-index={index}>
@@ -46,7 +55,7 @@ const certifications: Certification[] = [
 							{cert.verifyUrl && (
 								<a href={cert.verifyUrl} target="_blank" rel="noopener noreferrer" class="cert-verify">
 									<iconify-icon icon="mdi:open-in-new"></iconify-icon>
-									Verify
+									{t.skills.verify}
 								</a>
 							)}
 						</div>
@@ -58,30 +67,41 @@ const certifications: Certification[] = [
 	</div>
 </section>
 
-<script>
-	import { gsap } from 'gsap';
-	import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-	gsap.registerPlugin(ScrollTrigger);
-
-	const cards = document.querySelectorAll('.cert-card');
-
-	gsap.fromTo(
-		cards,
-		{ opacity: 0, y: 60 },
-		{
-			opacity: 1,
-			y: 0,
-			duration: 0.8,
-			stagger: 0.15,
-			ease: 'power3.out',
-			scrollTrigger: {
-				trigger: '.certifications-grid',
-				start: 'top 80%',
-				toggleActions: 'play none none reverse',
-			},
+<script is:inline>
+	// Wait for gsap to be available (loaded via CDN in Layout)
+	const checkGSAP = () => {
+		if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+			setTimeout(checkGSAP, 50);
+			return;
 		}
-	);
+
+		gsap.registerPlugin(ScrollTrigger);
+
+		const cards = document.querySelectorAll('.cert-card');
+
+		gsap.fromTo(
+			cards,
+			{ opacity: 0, y: 60 },
+			{
+				opacity: 1,
+				y: 0,
+				duration: 0.8,
+				stagger: 0.15,
+				ease: 'power3.out',
+				scrollTrigger: {
+					trigger: '.certifications-grid',
+					start: 'top 80%',
+					toggleActions: 'play none none reverse',
+				},
+			}
+		);
+	};
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', checkGSAP);
+	} else {
+		checkGSAP();
+	}
 </script>
 
 <style>

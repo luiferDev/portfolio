@@ -1,18 +1,26 @@
 ---
 import { Image } from 'astro:assets';
 import luiferdev from '../../public/luiferdev.jpg';
+import { useTranslations } from '../i18n/config';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale = 'es' } = Astro.props;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
 ---
 
 <section class="hero" id="hero">
 	<div class="hero-panel">
 		<div class="hero-content">
-			<span class="hero-greeting">Hi, I'm</span>
-			<h1 class="hero-name">LuiferDev</h1>
-			<p class="hero-role">Full Stack Developer</p>
-			<p class="hero-tagline">Building digital experiences with code and creativity</p>
+			<span class="hero-greeting">{t.hero.greeting}</span>
+			<h1 class="hero-name">{t.hero.name}</h1>
+			<p class="hero-role">{t.hero.role}</p>
+			<p class="hero-tagline">{t.hero.tagline}</p>
 			<div class="hero-cta">
-				<a href="#projects" class="btn-primary">View My Work</a>
-				<a href="#contact" class="btn-secondary">Contact Me</a>
+				<a href="#projects" class="btn-primary">{t.hero.cta1}</a>
+				<a href="#contact" class="btn-secondary">{t.hero.cta2}</a>
 			</div>
 		</div>
 		<div class="hero-image-container">

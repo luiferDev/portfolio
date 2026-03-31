@@ -1,29 +1,46 @@
 ---
 import { Icon } from 'astro-icon/components';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { getLangFromUrl, useTranslations, defaultLang } from '../i18n/config';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale } = Astro.props;
+
+// Use prop locale if provided, otherwise detect from URL
+const currentLang = locale || getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang as 'es' | 'en' | 'fr');
 
 const leftLinks = [
-  { name: 'About', href: '#about' },
-  { name: 'Experience', href: '#experience' },
-  { name: 'Education', href: '#education' },
+  { name: t.nav.about, href: '#about' },
+  { name: t.nav.experience, href: '#experience' },
+  { name: t.nav.education, href: '#education' },
 ];
 
 const rightLinks = [
-  { name: 'Projects', href: '#projects' },
-  { name: 'Certifications', href: '#certifications' },
-  { name: 'Skills', href: '#skills' },
+  { name: t.nav.projects, href: '#projects' },
+  { name: t.nav.certifications, href: '#certifications' },
+  { name: t.nav.skills, href: '#skills' },
 ];
 
 const palette = ['#93565d', '#ffffff', '#000000'];
+
+// Build home URL based on locale
+const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
 ---
 
 <nav class="floating-pill" aria-label="main navigation">
-  <div class="pill-left">
-    <a href="#about" class="pill-link">About</a>
-    <a href="#experience" class="pill-link">Experience</a>
-    <a href="#education" class="pill-link">Education</a>
+  <!-- Desktop: Left Links -->
+  <div class="pill-left desktop-only">
+    {leftLinks.map(link => (
+      <a href={link.href} class="pill-link">{link.name}</a>
+    ))}
   </div>
   
-  <a href="/" class="pill-logo" aria-label="Home">
+  <!-- Logo -->
+  <a href={homeUrl} class="pill-logo" aria-label="Home">
     <div class="ps5-button">
       <svg class="power-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 2V12M12 12L6 18M12 12L18 18M12 12H4M12 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -32,25 +49,91 @@ const palette = ['#93565d', '#ffffff', '#000000'];
     </div>
   </a>
   
-  <div class="pill-right">
-    <a href="#projects" class="pill-link">Projects</a>
-    <a href="#certifications" class="pill-link">Certifications</a>
-    <a href="#skills" class="pill-link">Skills</a>
+  <!-- Desktop: Right Links + Lang Switcher -->
+  <div class="pill-right desktop-only">
+    {rightLinks.map(link => (
+      <a href={link.href} class="pill-link">{link.name}</a>
+    ))}
+    <LanguageSwitcher locale={currentLang} />
   </div>
+  
+  <!-- Mobile: Hamburger Button -->
+  <button class="hamburger-btn mobile-only" aria-label="Open menu" aria-expanded="false">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
 </nav>
 
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" aria-hidden="true">
+  <div class="mobile-menu">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-title">Menu</span>
+      <button class="mobile-close-btn" aria-label="Close menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="mobile-menu-links">
+      {leftLinks.map(link => (
+        <a href={link.href} class="mobile-link">{link.name}</a>
+      ))}
+      {rightLinks.map(link => (
+        <a href={link.href} class="mobile-link">{link.name}</a>
+      ))}
+    </div>
+    
+    <div class="mobile-menu-footer">
+      <span class="mobile-lang-label">Idioma / Language</span>
+      <LanguageSwitcher locale={currentLang} />
+    </div>
+  </div>
+</div>
+
 <script is:inline>
-  const palette = ['#93565d', '#ffffff', '#000000'];
-  let colorIndex = 0;
+  // Global state to track PS5 animation initialization
+  window.ps5AnimationInitialized = false;
   
-  function initNavbar() {
+  // Use astro:page-load to handle View Transitions
+  function initAnimations() {
+    // Wait for GSAP to be available
+    if (typeof gsap === 'undefined') {
+      setTimeout(initAnimations, 100);
+      return;
+    }
+    
+    const palette = ['#93565d', '#ffffff', '#000000'];
+    let colorIndex = 0;
+    let animationInterval = null;
+    let currentTween1 = null;
+    let currentTween2 = null;
+    
     const ps5Button = document.querySelector('.ps5-button');
     const powerIcon = document.querySelector('.power-icon');
-    const pillLinks = document.querySelectorAll('.pill-link');
     const floatingPill = document.querySelector('.floating-pill');
     
-    if (typeof gsap !== 'undefined') {
-      // Entrance animation - only for the pill container
+    if (!ps5Button || !powerIcon || !floatingPill) {
+      setTimeout(initAnimations, 100);
+      return;
+    }
+    
+    // Clean up any existing animation
+    if (animationInterval) {
+      clearInterval(animationInterval);
+    }
+    if (currentTween1) {
+      currentTween1.kill();
+    }
+    if (currentTween2) {
+      currentTween2.kill();
+    }
+    
+    // Entry animation - only on first load
+    if (!window.ps5AnimationInitialized) {
       gsap.from('.floating-pill', {
         y: -20,
         opacity: 0,
@@ -58,7 +141,6 @@ const palette = ['#93565d', '#ffffff', '#000000'];
         ease: 'power2.out'
       });
       
-      // Logo bounce
       gsap.from('.pill-logo', {
         scale: 0.5,
         duration: 0.3,
@@ -66,76 +148,121 @@ const palette = ['#93565d', '#ffffff', '#000000'];
         ease: 'back.out(2)'
       });
       
-      // Infinite color animation on PS5 button
-      function animatePS5Button() {
-        colorIndex = (colorIndex + 1) % palette.length;
-        
-        gsap.to(ps5Button, {
-          borderColor: palette[colorIndex],
-          boxShadow: `0 0 15px ${palette[colorIndex]}40, 0 0 30px ${palette[colorIndex]}20`,
-          duration: 0.8,
-          ease: 'sine.inOut',
-          onComplete: animatePS5Button
-        });
-        
-        gsap.to(powerIcon, {
-          color: palette[colorIndex],
-          duration: 0.8,
-          ease: 'sine.inOut'
-        });
-      }
-      
-      animatePS5Button();
-      
-      // Hover effects for PS5 button
-      ps5Button?.addEventListener('mouseenter', () => {
-        gsap.killTweensOf(ps5Button);
-        gsap.killTweensOf(powerIcon);
-        
-        gsap.to(ps5Button, {
-          scale: 1.15,
-          borderColor: '#fff',
-          boxShadow: '0 0 25px rgba(255,255,255,0.5)',
-          duration: 0.3,
-          ease: 'power2.out'
-        });
-        
-        gsap.to(powerIcon, {
-          color: '#fff',
-          duration: 0.3,
-          ease: 'power2.out'
-        });
-      });
-      
-      ps5Button?.addEventListener('mouseleave', () => {
-        animatePS5Button();
-        
-        gsap.to(ps5Button, {
-          scale: 1,
-          duration: 0.3,
-          ease: 'power2.out'
-        });
-      });
-      
-      // Hover effects for pill links - simple CSS is enough
+      window.ps5AnimationInitialized = true;
     }
     
-    // Scroll effect - add scrolled class
-    if (floatingPill) {
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-          floatingPill.classList.add('scrolled');
-        } else {
-          floatingPill.classList.remove('scrolled');
-        }
+    // Continuous color animation
+    function animatePS5Button() {
+      if (!ps5Button || !powerIcon) return;
+      
+      colorIndex = (colorIndex + 1) % palette.length;
+      
+      currentTween1 = gsap.to(ps5Button, {
+        borderColor: palette[colorIndex],
+        boxShadow: `0 0 15px ${palette[colorIndex]}40, 0 0 30px ${palette[colorIndex]}20`,
+        duration: 0.8,
+        ease: 'sine.inOut'
+      });
+      
+      currentTween2 = gsap.to(powerIcon, {
+        color: palette[colorIndex],
+        duration: 0.8,
+        ease: 'sine.inOut',
+        onComplete: animatePS5Button
       });
     }
+    
+    animatePS5Button();
+    
+    ps5Button.addEventListener('mouseenter', () => {
+      if (currentTween1) currentTween1.kill();
+      if (currentTween2) currentTween2.kill();
+      
+      currentTween1 = gsap.to(ps5Button, {
+        scale: 1.15,
+        borderColor: '#fff',
+        boxShadow: '0 0 25px rgba(255,255,255,0.5)',
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+      
+      gsap.to(powerIcon, {
+        color: '#fff',
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+    });
+    
+    ps5Button.addEventListener('mouseleave', () => {
+      animatePS5Button();
+      
+      currentTween1 = gsap.to(ps5Button, {
+        scale: 1.15,
+        borderColor: '#fff',
+        boxShadow: '0 0 25px rgba(255,255,255,0.5)',
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+      
+      currentTween2 = gsap.to(powerIcon, {
+        color: '#fff',
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+    });
+    
+    ps5Button.addEventListener('mouseleave', () => {
+      animatePS5Button();
+      
+      currentTween1 = gsap.to(ps5Button, {
+        scale: 1,
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+    });
   }
+
+  // Initialize on first load - delay to ensure GSAP is loaded
+  setTimeout(initAnimations, 100);
   
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNavbar);
-  } else {
-    initNavbar();
+  // Re-initialize on View Transition navigation
+  document.addEventListener('astro:page-load', initAnimations);
+  
+  // Mobile menu functionality
+  const hamburgerBtn = document.querySelector('.hamburger-btn');
+  const overlay = document.querySelector('.mobile-menu-overlay');
+  const closeBtn = document.querySelector('.mobile-close-btn');
+  
+  hamburgerBtn?.addEventListener('click', () => {
+    overlay?.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    hamburgerBtn.setAttribute('aria-expanded', 'true');
+  });
+  
+  closeBtn?.addEventListener('click', () => {
+    overlay?.classList.remove('active');
+    document.body.style.overflow = '';
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+  });
+  
+  overlay?.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+  
+  // Scroll effect
+  const floatingPillScroll = document.querySelector('.floating-pill');
+  if (floatingPillScroll) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        floatingPillScroll.classList.add('scrolled');
+      } else {
+        floatingPillScroll.classList.remove('scrolled');
+      }
+    });
   }
 </script>
 
@@ -240,7 +367,7 @@ const palette = ['#93565d', '#ffffff', '#000000'];
     text-shadow: 0 0 8px rgba(147, 86, 93, 0.5);
   }
 
-  /* Scroll behavior - increase blur on scroll */
+  /* Scroll behavior */
   .floating-pill.scrolled {
     background: rgba(34, 34, 34, 0.95);
     backdrop-filter: blur(24px);
@@ -250,6 +377,51 @@ const palette = ['#93565d', '#ffffff', '#000000'];
       0 0 40px rgba(147, 86, 93, 0.2);
   }
 
+  /* Hamburger Button (Mobile) */
+  .hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .hamburger-line {
+    width: 24px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .hamburger-btn[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .hamburger-btn[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-btn[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Desktop Only */
+  .desktop-only {
+    display: flex;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  /* Responsive */
   @media (max-width: 900px) {
     .floating-pill {
       padding: 0.4rem 1rem;
@@ -278,13 +450,150 @@ const palette = ['#93565d', '#ffffff', '#000000'];
   }
 
   @media (max-width: 640px) {
-    .pill-link {
-      display: none;
+    .desktop-only {
+      display: none !important;
     }
-    
+
+    .mobile-only {
+      display: flex;
+    }
+
     .floating-pill {
       padding: 0.5rem;
       gap: 0.5rem;
     }
+
+    .hamburger-btn {
+      display: flex;
+    }
+  }
+
+  /* Mobile Menu Overlay */
+  .mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100%;
+    background: #1a1a1a;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-menu-overlay.active .mobile-menu {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-menu-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .mobile-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .mobile-close-btn:hover {
+    color: #fff;
+  }
+
+  .mobile-menu-links {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mobile-link {
+    display: block;
+    padding: 0.875rem 1rem;
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-link:hover {
+    background: rgba(147, 86, 93, 0.2);
+    color: #fff;
+  }
+
+  .mobile-menu-footer {
+    padding: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .mobile-lang-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Override LanguageSwitcher for mobile */
+  .mobile-menu-footer :global(.lang-switcher-container) {
+    width: 100%;
+  }
+
+  .mobile-menu-footer :global(.lang-switcher-btn) {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem;
+  }
+
+  .mobile-menu-footer :global(.lang-dropdown) {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    background: rgba(40, 40, 40, 0.95);
   }
 </style>

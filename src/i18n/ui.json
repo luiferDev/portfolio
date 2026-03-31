@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "about": "Sobre Mí",
+    "experience": "Experiencia",
+    "education": "Educación",
+    "projects": "Proyectos",
+    "certifications": "Certificaciones",
+    "skills": "Habilidades"
+  },
+  "about": {
+    "title": "Sobre Mí",
+    "description": "Desarrollador Full Stack con más de 10 años de experiencia creando soluciones digitales innovadoras."
+  },
+  "experience": {
+    "title": "Experiencia"
+  },
+  "education": {
+    "title": "Educación"
+  },
+  "projects": {
+    "title": "Proyectos",
+    "viewProject": "Ver Proyecto",
+    "technologies": "Tecnologías",
+    "features": "Características"
+  },
+  "certifications": {
+    "title": "Certificaciones"
+  },
+  "skills": {
+    "title": "Habilidades"
+  },
+  "welcome": {
+    "greeting": "Hola, soy",
+    "name": "Jorge Luis Morales Cruz",
+    "title": "Full Stack Developer",
+    "subtitle": "Especializado en crear experiencias digitales extraordinarias."
+  },
+  "footer": {
+    "copyright": "© 2024 Jorge Luis Morales Cruz. Todos los derechos reservados."
+  }
+}

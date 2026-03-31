@@ -1,11 +1,34 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import { useTranslations } from '../i18n/config';
 
-const contents = await getCollection('contents');
+interface Props {
+  locale?: string;
+}
 
-const about = await getEntry('contents', 'about');
+const { locale = 'es' } = Astro.props;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
+
+// Get locale-specific content - IDs are lowercase
+const allContents = await getCollection('contents');
+
+// Find about content based on locale
+let about;
+if (locale === 'es') {
+  // Spanish: try es/about first, then fallback to root about
+  about = allContents.find(c => c.id === 'es/about') || allContents.find(c => c.id === 'about');
+} else {
+  // English/French: look in respective directory
+  about = allContents.find(c => c.id === `${locale}/about`);
+}
+
+// Fallback to any about entry
 if (!about) {
-	throw new Error('Could not find about entry');
+  about = allContents.find(c => c.id.endsWith('/about') || c.id === 'about');
+}
+
+if (!about) {
+  throw new Error(`Could not find about entry for locale: ${locale}`);
 }
 
 const { Content } = await render(about);
@@ -13,7 +36,7 @@ const { Content } = await render(about);
 
 <section aria-label="about me section of my resume" class="about max-w-[750px] mx-auto" id="about">
 	<div class="about-container">
-		<h2 class="about-heading">About Me</h2>
+		<h2 class="about-heading">{t.about.title}</h2>
 		<div class="about-content">
 			<Content />
 		</div>

@@ -9,14 +9,23 @@ interface Props {
   link?: string;
   github?: string;
   id: string;
+  slug?: string;
+  locale?: string;
   index: number;
+  t?: {
+    live: string;
+    code: string;
+  };
 }
 
-const { title, description, image, technologies, link, github, id, index } = Astro.props;
+const { title, description, image, technologies, link, github, id, slug, locale = 'es', index, t } = Astro.props;
+
+// Build URL with locale: /projects/[locale]/[slug]
+const projectUrl = locale === 'es' ? `/projects/es/${slug}` : `/projects/${locale}/${slug}`;
 ---
 
 <a
-  href={`/projects/${id}`}
+  href={projectUrl}
   data-gsap-project
   class="project-card group block bg-white/5 border border-white/10 backdrop-blur-md rounded-xl overflow-hidden hover:border-[#93565d]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#93565d]/10"
 >
@@ -52,13 +61,13 @@ const { title, description, image, technologies, link, github, id, index } = Ast
       {link && (
         <span class="flex items-center gap-1 text-sm text-gray-300 group-hover:text-white transition-colors">
           <Icon name="mdi:web" class="w-4 h-4" />
-          <span>Live</span>
+          <span>{t?.live || 'Live'}</span>
         </span>
       )}
       {github && (
         <span class="flex items-center gap-1 text-sm text-gray-300 group-hover:text-white transition-colors">
           <Icon name="mdi:github" class="w-4 h-4" />
-          <span>Code</span>
+          <span>{t?.code || 'Code'}</span>
         </span>
       )}
     </div>

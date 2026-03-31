@@ -25,6 +25,7 @@ const experiences = defineCollection({
 	}),
 	schema: z.object({
 		company: z.string(),
+		role: z.string(),
 		work: z
 			.string()
 			.refine(
@@ -36,7 +37,6 @@ const experiences = defineCollection({
 			),
 		initial: z.string(),
 		final: z.string(),
-		role: z.string(),
 	}),
 });
 
@@ -53,11 +53,19 @@ const projects = defineCollection({
 	}),
 	schema: z.object({
 		title: z.string(),
+		title_en: z.string().optional(),
+		title_fr: z.string().optional(),
 		description: z.string(),
+		description_en: z.string().optional(),
+		description_fr: z.string().optional(),
 		fullDescription: z.string(),
+		fullDescription_en: z.string().optional(),
+		fullDescription_fr: z.string().optional(),
 		image: z.string(),
 		technologies: z.array(z.string()),
 		features: z.array(z.string()),
+		features_en: z.array(z.string()).optional(),
+		features_fr: z.array(z.string()).optional(),
 		status: z
 			.string()
 			.refine(
