@@ -2,6 +2,15 @@
 import { getCollection, render } from 'astro:content';
 import { useTranslations } from '../../shared/config/i18n';
 
+/**
+ * ExperienceSection - Renders the professional experience timeline.
+ *
+ * Fetches locale-specific entries from the 'experiences' collection,
+ * sorts them by date (most recent first), and renders each as a
+ * timeline card with an animated clock indicator.
+ *
+ * @param locale - Language code ('es' | 'en' | 'fr'). Defaults to 'es'.
+ */
 interface Props {
   locale?: string;
 }
@@ -9,11 +18,11 @@ interface Props {
 const { locale = 'es' } = Astro.props;
 const t = useTranslations(locale as 'es' | 'en' | 'fr');
 
-// Get locale-specific experiences
+/** Fetch and filter experiences for the current locale */
 const allExperiences = await getCollection('experiences');
 const experiences = allExperiences.filter(exp => exp.id.startsWith(locale + '/'));
 
-// Sort experiences by date (most recent first)
+/** Sort by start date, most recent first */
 const sortedExperiences = [...experiences].sort((a, b) => {
   const dateA = new Date(a.data.initial);
   const dateB = new Date(b.data.initial);

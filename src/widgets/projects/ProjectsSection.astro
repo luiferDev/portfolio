@@ -3,6 +3,14 @@ import { getCollection } from 'astro:content';
 import ProjectCard from '../../entities/project/ProjectCard.astro';
 import { useTranslations } from '../../shared/config/i18n';
 
+/**
+ * ProjectsSection - Renders a grid of project cards for the current locale.
+ *
+ * Fetches locale-specific entries from the 'projects' collection and
+ * passes each project's data to the ProjectCard entity component.
+ *
+ * @param locale - Language code ('es' | 'en' | 'fr'). Defaults to 'es'.
+ */
 interface Props {
   locale?: string;
 }
@@ -10,7 +18,7 @@ interface Props {
 const { locale = 'es' } = Astro.props;
 const t = useTranslations(locale as 'es' | 'en' | 'fr');
 
-// Get locale-specific projects
+/** Fetch and filter projects for the current locale */
 const allProjects = await getCollection('projects');
 const projects = allProjects.filter(project => project.id.startsWith(locale + '/'));
 ---

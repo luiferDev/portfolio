@@ -2,6 +2,15 @@
 import { getCollection, render } from 'astro:content';
 import { useTranslations } from '../../shared/config/i18n';
 
+/**
+ * AboutSection - Renders the "About Me" section with locale-specific content.
+ *
+ * Fetches content from the 'contents' collection and filters by locale.
+ * Falls back through locale hierarchy: es/about → about → any /about entry.
+ *
+ * @param locale - Language code ('es' | 'en' | 'fr'). Defaults to 'es'.
+ * @throws Error if no about content is found for the given locale.
+ */
 interface Props {
   locale?: string;
 }
@@ -9,20 +18,20 @@ interface Props {
 const { locale = 'es' } = Astro.props;
 const t = useTranslations(locale as 'es' | 'en' | 'fr');
 
-// Get locale-specific content - IDs are lowercase
+/** Fetch all content entries from the 'contents' collection */
 const allContents = await getCollection('contents');
 
-// Find about content based on locale
+/**
+ * Resolve the about entry for the current locale.
+ * Priority: locale-specific → root fallback → any /about entry.
+ */
 let about;
 if (locale === 'es') {
-  // Spanish: try es/about first, then fallback to root about
   about = allContents.find(c => c.id === 'es/about') || allContents.find(c => c.id === 'about');
 } else {
-  // English/French: look in respective directory
   about = allContents.find(c => c.id === `${locale}/about`);
 }
 
-// Fallback to any about entry
 if (!about) {
   about = allContents.find(c => c.id.endsWith('/about') || c.id === 'about');
 }
@@ -31,6 +40,7 @@ if (!about) {
   throw new Error(`Could not find about entry for locale: ${locale}`);
 }
 
+/** Render the Markdown content to an Astro component */
 const { Content } = await render(about);
 ---
 
