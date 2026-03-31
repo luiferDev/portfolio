@@ -1,5 +1,14 @@
 @import 'tailwindcss';
 
+:root {
+	--glass-bg: rgba(255, 255, 255, 0.05);
+	--glass-border: rgba(255, 255, 255, 0.1);
+	--glass-blur: blur(12px);
+	--palette-bg: #222;
+	--palette-accent: #93565d;
+	--palette-text: #ffffff;
+}
+
 p {
 	@apply text-gray-300 pb-4;
 }
@@ -13,5 +22,60 @@ body > div {
 }
 
 section {
-	@apply max-w-[750px] mt-12;
+	@apply mt-12;
+}
+
+#hero {
+	margin-top: 0;
+}
+
+.glass-nav {
+	background: var(--glass-bg);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-card {
+	background: var(--glass-bg);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	border: 1px solid var(--glass-border);
+	border-radius: 0.75rem;
+	transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+.glass-panel {
+	background: var(--glass-bg);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	border: 1px solid var(--glass-border);
+	border-radius: 1rem;
+	padding: 2rem;
+}
+
+.glass-input {
+	background: var(--glass-bg);
+	backdrop-filter: var(--glass-blur);
+	-webkit-backdrop-filter: var(--glass-blur);
+	border: 1px solid var(--glass-border);
+	border-radius: 0.5rem;
+	padding: 0.75rem 1rem;
+	color: #fff;
+	outline: none;
+	transition: border-color 0.3s ease;
+}
+
+.glass-input:focus {
+	border-color: rgba(147, 86, 93, 0.6);
+}
+
+.glass-input::placeholder {
+	color: rgba(255, 255, 255, 0.4);
 }
