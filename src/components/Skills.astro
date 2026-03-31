@@ -1,169 +1,86 @@
 ---
 import { Icon } from 'astro-icon/components';
 
-const frontendSkills = [
-	{
-		name: 'React',
-		icon: 'mdi:react',
-	},
-	{
-		name: 'Astro',
-		icon: 'simple-icons:astro',
-	},
-	{
-		name: 'Tailwind',
-		icon: 'mdi:tailwind',
-	},
-	{
-		name: 'JavaScript',
-		icon: 'mdi:language-javascript',
-	},
-	{
-		name: 'TypeScript',
-		icon: 'mdi:language-typescript',
-	},
-];
-
-const backendSkills = [
-	{
-		name: '.NET',
-		icon: 'mdi:dot-net',
-	},
-	{
-		name: 'Node JS',
-		icon: 'mdi:nodejs',
-	},
-	{
-		name: 'Java',
-		icon: 'mdi:language-java',
-	},
-	{
-		name: 'Spring',
-		icon: 'simple-icons:spring',
-	},
-	{
-		name: 'SQL',
-		icon: 'mdi:database',
-	},
-	{
-		name: 'MongoDB',
-		icon: 'simple-icons:mongodb',
-	},
-	{
-		name: 'Docker',
-		icon: 'mdi:docker',
-	},
-	{
-		name: 'Kubernetes',
-		icon: 'mdi:kubernetes',
-	},
-];
-
-const testingSkills = [
-	{
-		name: 'Python',
-		icon: 'mdi:language-python',
-	},
-	{
-		name: 'Selenium',
-		icon: 'simple-icons:selenium',
-	},
-	{
-		name: 'Cypress',
-		icon: 'simple-icons:cypress',
-	},
-	{
-		name: 'Playwright',
-		icon: 'devicon-plain:playwright',
-	},
-	{
-		name: 'Postman',
-		icon: 'devicon-plain:postman',
-	},
-	{
-		name: 'Insomnia',
-		icon: 'devicon-plain:insomnia',
-	},
-];
-
-const toolsSkills = [
-	{
-		name: 'Git',
-		icon: 'mdi:git',
-	},
-	{
-		name: 'GitHub',
-		icon: 'mdi:github',
-	},
-	{
-		name: 'Jira',
-		icon: 'mdi:jira',
-	},
-	{
-		name: 'Trello',
-		icon: 'mdi:trello',
-	},
+const allSkills = [
+	// Frontend
+	{ name: 'React', icon: 'mdi:react' },
+	{ name: 'Astro', icon: 'simple-icons:astro' },
+	{ name: 'Tailwind', icon: 'mdi:tailwind' },
+	{ name: 'JavaScript', icon: 'mdi:language-javascript' },
+	{ name: 'TypeScript', icon: 'mdi:language-typescript' },
+	// Backend
+	{ name: '.NET', icon: 'mdi:dot-net' },
+	{ name: 'Node JS', icon: 'mdi:nodejs' },
+	{ name: 'Java', icon: 'mdi:language-java' },
+	{ name: 'Spring', icon: 'simple-icons:spring' },
+	{ name: 'SQL', icon: 'mdi:database' },
+	{ name: 'MongoDB', icon: 'simple-icons:mongodb' },
+	{ name: 'Docker', icon: 'mdi:docker' },
+	{ name: 'Kubernetes', icon: 'mdi:kubernetes' },
+	// Testing
+	{ name: 'Python', icon: 'mdi:language-python' },
+	{ name: 'Selenium', icon: 'simple-icons:selenium' },
+	{ name: 'Cypress', icon: 'simple-icons:cypress' },
+	{ name: 'Playwright', icon: 'devicon-plain:playwright' },
+	{ name: 'Postman', icon: 'devicon-plain:postman' },
+	{ name: 'Insomnia', icon: 'devicon-plain:insomnia' },
+	// Tools
+	{ name: 'Git', icon: 'mdi:git' },
+	{ name: 'GitHub', icon: 'mdi:github' },
+	{ name: 'Jira', icon: 'mdi:jira' },
+	{ name: 'Trello', icon: 'mdi:trello' },
 ];
 ---
 
-<section class="mb-12">
-	<article>
-		<h2 class="text-2xl mb-4">Skills</h2>
-		
-		<div class="mb-6">
-			<h3 class="text-xl mb-2">Frontend</h3>
-			<div class="grid grid-cols-5 md:grid-cols-7 gap-2">
-				{
-					frontendSkills.map((skill) => (
-						<div class="flex flex-col items-center text-center p-2 bg-[#581a21] rounded-lg hover:bg-[#93565d] transition-colors">
-							<Icon name={skill.icon} class="text-3xl mb-1" />
-							<span class="text-sm">{skill.name}</span>
-						</div>
-					))
-				}
-			</div>
+<section id="skills" class="w-screen -mt-20 mb-8" style="transform: rotate(-10deg); z-index: 50;">
+	<div class="w-full overflow-hidden py-6 bg-[#581a21]/60 backdrop-blur-xl border-y border-[#93565d]/30">
+		<div class="flex gap-4 w-max" id="skills-band">
+			{allSkills.map((skill) => (
+				<div class="flex flex-col items-center justify-center min-w-[90px] py-4 px-5 bg-[#581a21]/80 backdrop-blur-sm border border-[#93565d]/40 rounded-xl transition-all duration-300 hover:bg-[#93565d]/80 hover:border-[#93565d]/60 hover:scale-105" style="box-shadow: 0 4px 20px rgba(147, 86, 93, 0.2);">
+					<Icon name={skill.icon} class="w-7 h-7 text-white mb-1" />
+					<span class="text-xs text-gray-100 font-medium">{skill.name}</span>
+				</div>
+			))}
+			{allSkills.map((skill) => (
+				<div class="flex flex-col items-center justify-center min-w-[90px] py-4 px-5 bg-[#581a21]/80 backdrop-blur-sm border border-[#93565d]/40 rounded-xl transition-all duration-300 hover:bg-[#93565d]/80 hover:border-[#93565d]/60 hover:scale-105" style="box-shadow: 0 4px 20px rgba(147, 86, 93, 0.2);">
+					<Icon name={skill.icon} class="w-7 h-7 text-white mb-1" />
+					<span class="text-xs text-gray-100 font-medium">{skill.name}</span>
+				</div>
+			))}
 		</div>
-		
-		<div class="mb-6">
-			<h3 class="text-xl mb-2">Backend</h3>
-			<div class="grid grid-cols-5 md:grid-cols-7 gap-2">
-				{
-					backendSkills.map((skill) => (
-						<div class="flex flex-col items-center text-center p-2 bg-[#581a21] rounded-lg hover:bg-[#93565d] transition-colors">
-							<Icon name={skill.icon} class="text-3xl mb-1" />
-							<span class="text-sm">{skill.name}</span>
-						</div>
-					))
-				}
-			</div>
-		</div>
-		
-		<div class="mb-6">
-			<h3 class="text-xl mb-2">Testing</h3>
-			<div class="grid grid-cols-5 md:grid-cols-7 gap-2">
-				{
-					testingSkills.map((skill) => (
-						<div class="flex flex-col items-center text-center p-2 bg-[#581a21] rounded-lg hover:bg-[#93565d] transition-colors">
-							<Icon name={skill.icon} class="text-3xl mb-1" />
-							<span class="text-sm">{skill.name}</span>
-						</div>
-					))
-				}
-			</div>
-		</div>
-		
-		<div class="mb-6">
-			<h3 class="text-xl mb-2">Tools</h3>
-			<div class="grid grid-cols-5 md:grid-cols-7 gap-2">
-				{
-					toolsSkills.map((skill) => (
-						<div class="flex flex-col items-center text-center p-2 bg-[#581a21] rounded-lg hover:bg-[#93565d] transition-colors">
-							<Icon name={skill.icon} class="text-3xl mb-1" />
-							<span class="text-sm">{skill.name}</span>
-						</div>
-					))
-				}
-			</div>
-		</div>
-	</article>
+	</div>
 </section>
+
+<script is:inline>
+	document.addEventListener('DOMContentLoaded', () => {
+		const band = document.getElementById('skills-band');
+		
+		if (band && typeof gsap !== 'undefined') {
+			const cardWidth = 100;
+			const numSkills = 24;
+			const singleSetWidth = cardWidth * numSkills;
+			
+			const anim = gsap.to(band, {
+				x: -singleSetWidth,
+				duration: 30,
+				repeat: -1,
+				ease: 'none',
+				modifiers: {
+					x: gsap.utils.unitize(x => parseFloat(x) % singleSetWidth)
+				}
+			});
+			
+			band.parentElement.addEventListener('mouseenter', () => anim.pause());
+			band.parentElement.addEventListener('mouseleave', () => anim.play());
+		}
+	});
+</script>
+
+<style>
+	@media (max-width: 768px) {
+		section#skills {
+			margin-top: 0 !important;
+			transform: rotate(0deg) !important;
+		}
+	}
+</style>
