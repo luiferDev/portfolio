@@ -185,24 +185,6 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
         ease: 'power2.out'
       });
       
-      gsap.to(powerIcon, {
-        color: '#fff',
-        duration: 0.3,
-        ease: 'power2.out'
-      });
-    });
-    
-    ps5Button.addEventListener('mouseleave', () => {
-      animatePS5Button();
-      
-      currentTween1 = gsap.to(ps5Button, {
-        scale: 1.15,
-        borderColor: '#fff',
-        boxShadow: '0 0 25px rgba(255,255,255,0.5)',
-        duration: 0.3,
-        ease: 'power2.out'
-      });
-      
       currentTween2 = gsap.to(powerIcon, {
         color: '#fff',
         duration: 0.3,
@@ -211,13 +193,23 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
     });
     
     ps5Button.addEventListener('mouseleave', () => {
-      animatePS5Button();
+      if (currentTween1) currentTween1.kill();
+      if (currentTween2) currentTween2.kill();
       
       currentTween1 = gsap.to(ps5Button, {
         scale: 1,
         duration: 0.3,
         ease: 'power2.out'
       });
+      
+      currentTween2 = gsap.to(powerIcon, {
+        color: palette[colorIndex],
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+      
+      // Reiniciar la animación de colores
+      animatePS5Button();
     });
   }
 
