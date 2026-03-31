@@ -22,7 +22,7 @@ const currentUrl = Astro.url.href;
   >
     <span class="current-flag">{languagesFlags[currentLang as keyof typeof languagesFlags]}</span>
     <span class="chevron">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <polyline points="6,9 12,15 18,9"></polyline>
       </svg>
     </span>
@@ -50,9 +50,10 @@ const currentUrl = Astro.url.href;
       
       return (
         <a
-          href={isCurrent ? '#' : targetUrl}
+          href={isCurrent ? targetUrl : targetUrl}
           class={`lang-option ${isCurrent ? 'active' : ''}`}
           data-lang={lang}
+          aria-label={`Switch to ${label}`}
         >
           <span class="flag">{languagesFlags[lang as keyof typeof languagesFlags]}</span>
           <span class="label">{label}</span>

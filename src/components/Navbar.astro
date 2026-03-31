@@ -34,14 +34,14 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
   <!-- Desktop: Left Links -->
   <div class="pill-left desktop-only">
     {leftLinks.map(link => (
-      <a href={link.href} class="pill-link">{link.name}</a>
+      <a href={link.href} class="pill-link" aria-label={link.name}>{link.name}</a>
     ))}
   </div>
-  
+
   <!-- Logo -->
   <a href={homeUrl} class="pill-logo" aria-label="Home">
     <div class="ps5-button">
-      <svg class="power-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="power-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M12 2V12M12 12L6 18M12 12L18 18M12 12H4M12 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
       </svg>
@@ -51,7 +51,7 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
   <!-- Desktop: Right Links + Lang Switcher -->
   <div class="pill-right desktop-only">
     {rightLinks.map(link => (
-      <a href={link.href} class="pill-link">{link.name}</a>
+      <a href={link.href} class="pill-link" aria-label={link.name}>{link.name}</a>
     ))}
     <LanguageSwitcher locale={currentLang} />
   </div>
@@ -70,7 +70,7 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
     <div class="mobile-menu-header">
       <span class="mobile-menu-title">Menu</span>
       <button class="mobile-close-btn" aria-label="Close menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -79,10 +79,10 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
     
     <div class="mobile-menu-links">
       {leftLinks.map(link => (
-        <a href={link.href} class="mobile-link">{link.name}</a>
+        <a href={link.href} class="mobile-link" aria-label={link.name}>{link.name}</a>
       ))}
       {rightLinks.map(link => (
-        <a href={link.href} class="mobile-link">{link.name}</a>
+        <a href={link.href} class="mobile-link" aria-label={link.name}>{link.name}</a>
       ))}
     </div>
     
