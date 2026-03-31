@@ -95,8 +95,7 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
 
 <script is:inline>
   // Global state to track PS5 animation initialization
-  // Use a flag to prevent double-initialization
-  window.ps5AnimationInitialized = window.ps5AnimationInitialized || false;
+  window.ps5AnimationInitialized = false;
   
   // Use astro:page-load to handle View Transitions
   function initAnimations() {
@@ -108,6 +107,7 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
     
     const palette = ['#93565d', '#ffffff', '#000000'];
     let colorIndex = 0;
+    let animationInterval = null;
     let currentTween1 = null;
     let currentTween2 = null;
     
@@ -120,7 +120,10 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
       return;
     }
     
-    // Clean up any existing tweens
+    // Clean up any existing animation
+    if (animationInterval) {
+      clearInterval(animationInterval);
+    }
     if (currentTween1) {
       currentTween1.kill();
     }
@@ -128,9 +131,8 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
       currentTween2.kill();
     }
     
-    // Entry animation - only on first page load (not on view transitions)
-    const isFirstLoad = !window.ps5AnimationInitialized;
-    if (isFirstLoad) {
+    // Entry animation - only on first load
+    if (!window.ps5AnimationInitialized) {
       gsap.from('.floating-pill', {
         y: -20,
         opacity: 0,
@@ -148,7 +150,7 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
       window.ps5AnimationInitialized = true;
     }
     
-    // Always start the continuous color animation
+    // Continuous color animation
     function animatePS5Button() {
       if (!ps5Button || !powerIcon) return;
       
@@ -183,6 +185,24 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
         ease: 'power2.out'
       });
       
+      gsap.to(powerIcon, {
+        color: '#fff',
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+    });
+    
+    ps5Button.addEventListener('mouseleave', () => {
+      animatePS5Button();
+      
+      currentTween1 = gsap.to(ps5Button, {
+        scale: 1.15,
+        borderColor: '#fff',
+        boxShadow: '0 0 25px rgba(255,255,255,0.5)',
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+      
       currentTween2 = gsap.to(powerIcon, {
         color: '#fff',
         duration: 0.3,
@@ -191,44 +211,21 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
     });
     
     ps5Button.addEventListener('mouseleave', () => {
-      if (currentTween1) currentTween1.kill();
-      if (currentTween2) currentTween2.kill();
+      animatePS5Button();
       
       currentTween1 = gsap.to(ps5Button, {
         scale: 1,
         duration: 0.3,
         ease: 'power2.out'
       });
-      
-      currentTween2 = gsap.to(powerIcon, {
-        color: palette[colorIndex],
-        duration: 0.3,
-        ease: 'power2.out'
-      });
-      
-      // Reiniciar la animación de colores
-      animatePS5Button();
     });
   }
 
-  // Wait for GSAP to be available before initializing
-  function waitForGSAP() {
-    if (typeof gsap === 'undefined') {
-      setTimeout(waitForGSAP, 50);
-      return;
-    }
-    initAnimations();
-  }
+  // Initialize on first load - delay to ensure GSAP is loaded
+  setTimeout(initAnimations, 100);
   
-  // Initialize on first load - wait for GSAP to load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', waitForGSAP);
-  } else {
-    waitForGSAP();
-  }
-  
-  // Also initialize on View Transition navigation
-  document.addEventListener('astro:page-load', waitForGSAP);
+  // Re-initialize on View Transition navigation
+  document.addEventListener('astro:page-load', initAnimations);
   
   // Mobile menu functionality
   const hamburgerBtn = document.querySelector('.hamburger-btn');

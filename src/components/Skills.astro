@@ -52,7 +52,7 @@ const allSkills = [
 </section>
 
 <script is:inline>
-	function initSkillsAnimation() {
+	document.addEventListener('DOMContentLoaded', () => {
 		const band = document.getElementById('skills-band');
 		
 		if (band && typeof gsap !== 'undefined') {
@@ -73,14 +73,7 @@ const allSkills = [
 			band.parentElement.addEventListener('mouseenter', () => anim.pause());
 			band.parentElement.addEventListener('mouseleave', () => anim.play());
 		}
-	}
-
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', initSkillsAnimation);
-	} else {
-		initSkillsAnimation();
-	}
-	document.addEventListener('astro:page-load', initSkillsAnimation);
+	});
 </script>
 
 <style>

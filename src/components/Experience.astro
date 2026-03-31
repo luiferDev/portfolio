@@ -79,89 +79,80 @@ const sortedExperiences = [...experiences].sort((a, b) => {
 </section>
 
 <script is:inline>
-	function initExperienceAnimations() {
-		if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-			setTimeout(initExperienceAnimations, 50);
-			return;
-		}
-		
-		gsap.registerPlugin(ScrollTrigger);
-		
-		const clock = document.querySelector('.timeline-clock');
-		const track = document.querySelector('.timeline-track');
-		const hourHandGroup = document.querySelector('.hour-hand-group');
-		const minuteHandGroup = document.querySelector('.minute-hand-group');
-		
-		if (clock && track && hourHandGroup && minuteHandGroup) {
-			const trackHeight = track.offsetHeight;
+	document.addEventListener('DOMContentLoaded', () => {
+		if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+			gsap.registerPlugin(ScrollTrigger);
 			
-			// El reloj baja por el timeline
-			gsap.fromTo(clock, 
-				{ y: -50 },
-				{ 
-					y: trackHeight - 40,
-					ease: 'none',
+			const clock = document.querySelector('.timeline-clock');
+			const track = document.querySelector('.timeline-track');
+			const hourHandGroup = document.querySelector('.hour-hand-group');
+			const minuteHandGroup = document.querySelector('.minute-hand-group');
+			
+			if (clock && track && hourHandGroup && minuteHandGroup) {
+				const trackHeight = track.offsetHeight;
+				
+				// El reloj baja por el timeline
+				gsap.fromTo(clock, 
+					{ y: -50 },
+					{ 
+						y: trackHeight - 40,
+						ease: 'none',
+						scrollTrigger: {
+							trigger: '.experience',
+							start: 'top center',
+							end: 'bottom center',
+							scrub: 1
+						}
+					}
+				);
+				
+				// Manecilla HORA (grande): gira MUY rápido -1080° (3 vueltas completas)
+				// La más grande y rápida
+				gsap.to({}, {
 					scrollTrigger: {
 						trigger: '.experience',
 						start: 'top center',
 						end: 'bottom center',
-						scrub: 1
+						scrub: 1,
+						onUpdate: (self) => {
+							const hourRotation = -1080 * self.progress;
+							hourHandGroup.style.transform = `rotate(${hourRotation}deg)`;
+							hourHandGroup.style.transformOrigin = '30px 30px';
+						}
 					}
-				}
-			);
+				});
+				
+				// Manecilla MINUTO (chica): gira más lento -180° (media vuelta)
+				// La más pequeña y lenta
+				gsap.to({}, {
+					scrollTrigger: {
+						trigger: '.experience',
+						start: 'top center',
+						end: 'bottom center',
+						scrub: 1,
+						onUpdate: (self) => {
+							const minuteRotation = -180 * self.progress;
+							minuteHandGroup.style.transform = `rotate(${minuteRotation}deg)`;
+							minuteHandGroup.style.transformOrigin = '30px 30px';
+						}
+					}
+				});
+			}
 			
-			// Manecilla HORA (grande): gira MUY rápido -1080° (3 vueltas completas)
-			gsap.to({}, {
+			// Cards entrance
+			gsap.from('.timeline-item', {
+				y: 15,
+				opacity: 0,
+				duration: 0.25,
+				stagger: 0.08,
+				ease: 'power2.out',
 				scrollTrigger: {
 					trigger: '.experience',
-					start: 'top center',
-					end: 'bottom center',
-					scrub: 1,
-					onUpdate: (self) => {
-						const hourRotation = -1080 * self.progress;
-						hourHandGroup.style.transform = `rotate(${hourRotation}deg)`;
-						hourHandGroup.style.transformOrigin = '30px 30px';
-					}
-				}
-			});
-			
-			// Manecilla MINUTO (chica): gira más lento -180° (media vuelta)
-			gsap.to({}, {
-				scrollTrigger: {
-					trigger: '.experience',
-					start: 'top center',
-					end: 'bottom center',
-					scrub: 1,
-					onUpdate: (self) => {
-						const minuteRotation = -180 * self.progress;
-						minuteHandGroup.style.transform = `rotate(${minuteRotation}deg)`;
-						minuteHandGroup.style.transformOrigin = '30px 30px';
-					}
+					start: 'top 80%'
 				}
 			});
 		}
-		
-		// Cards entrance
-		gsap.from('.timeline-item', {
-			y: 15,
-			opacity: 0,
-			duration: 0.25,
-			stagger: 0.08,
-			ease: 'power2.out',
-			scrollTrigger: {
-				trigger: '.experience',
-				start: 'top 80%'
-			}
-		});
-	}
-
-	// Initialize on both DOMContentLoaded and astro:page-load (for View Transitions)
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', initExperienceAnimations);
-	} else {
-		initExperienceAnimations();
-	}
-	document.addEventListener('astro:page-load', initExperienceAnimations);
+	});
 </script>
 
 <style>
