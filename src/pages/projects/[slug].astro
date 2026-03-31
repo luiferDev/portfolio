@@ -1,0 +1,127 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('projects');
+	return projects.map((project) => ({
+		params: { slug: project.id },
+		props: { project },
+	}));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const { title, description, fullDescription, image, technologies, features, status, year, link, github, frontend, backend } = data;
+---
+
+<Layout title={`${title} | Projects`}>
+	<main class="max-w-4xl mx-auto px-6 py-12">
+		<a
+			href="/#projects"
+			class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
+		>
+			<Icon name="mdi:arrow-left" class="w-5 h-5" />
+			<span>Back to Projects</span>
+		</a>
+
+		<article class="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden">
+			<div class="aspect-video relative overflow-hidden">
+				<img
+					src={image}
+					alt={title}
+					class="w-full h-full object-cover"
+				/>
+				<div class="absolute top-4 right-4">
+					<span class={`px-3 py-1 rounded-full text-sm font-medium ${
+						status === 'Completed' ? 'bg-green-500/20 text-green-400' :
+						status === 'InProgress' ? 'bg-yellow-500/20 text-yellow-400' :
+						'bg-blue-500/20 text-blue-400'
+					}`}>
+						{status}
+					</span>
+				</div>
+			</div>
+
+			<div class="p-8">
+				<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+					<h1 class="text-3xl font-bold">{title}</h1>
+					<span class="text-gray-400">{year}</span>
+				</div>
+
+				<p class="text-gray-300 text-lg mb-8">{fullDescription}</p>
+
+				<div class="mb-8">
+					<h2 class="text-xl font-semibold mb-4">Technologies</h2>
+					<div class="flex flex-wrap gap-2">
+						{technologies.map((tech) => (
+							<span class="px-3 py-1.5 bg-[#93565d]/20 text-[#93565d] rounded-lg text-sm">
+								{tech}
+							</span>
+						))}
+					</div>
+				</div>
+
+				{(frontend || backend) && (
+					<div class="mb-8">
+						<h2 class="text-xl font-semibold mb-4">Stack</h2>
+						<div class="flex flex-wrap gap-4">
+							{frontend && (
+								<div class="flex items-center gap-2 text-gray-300">
+									<Icon name="mdi:react" class="w-5 h-5" />
+									<span>{frontend}</span>
+								</div>
+							)}
+							{backend && (
+								<div class="flex items-center gap-2 text-gray-300">
+									<Icon name="mdi:server" class="w-5 h-5" />
+									<span>{backend}</span>
+								</div>
+							)}
+						</div>
+					</div>
+				)}
+
+				{features.length > 0 && (
+					<div class="mb-8">
+						<h2 class="text-xl font-semibold mb-4">Features</h2>
+						<ul class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+							{features.map((feature) => (
+								<li class="flex items-center gap-2 text-gray-300">
+									<Icon name="mdi:check-circle" class="w-5 h-5 text-[#93565d]" />
+									<span>{feature}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+
+				<div class="flex flex-wrap gap-4 pt-6 border-t border-white/10">
+					{link && (
+						<a
+							href={link}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 px-6 py-3 bg-[#93565d] hover:bg-[#7a4550] rounded-lg transition-colors"
+						>
+							<Icon name="mdi:web" class="w-5 h-5" />
+							<span>Live Demo</span>
+						</a>
+					)}
+					{github && (
+						<a
+							href={github}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+						>
+							<Icon name="mdi:github" class="w-5 h-5" />
+							<span>View Code</span>
+						</a>
+					)}
+				</div>
+			</div>
+		</article>
+	</main>
+</Layout>
