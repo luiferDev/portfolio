@@ -1,12 +1,198 @@
 ---
+interface Education {
+	institution: string;
+	degree: string;
+	dates: string;
+	current?: boolean;
+}
 
+const education: Education[] = [
+	{
+		institution: 'Servicio Nacional de Aprendizaje (SENA)',
+		degree: 'Software Testing Processing',
+		dates: 'Sep 2024 - Jul 2025',
+		current: true,
+	},
+];
 ---
 
-<section aria-label="education section of my resume" class="max-w-[750px] mx-auto">
-	<h2 class="text-2xl mb-4">Education</h2>
-	<div class="flex flex-row justify-between mb-2">
-		<h3>Servicio Nacional de Apredizaje <b>(SENA)</b></h3>
-		<span class="text-gray-400">Sep 2024 - Jul 2025</span>
+<section aria-label="education section of my resume" class="max-w-4xl mx-auto">
+	<h2 class="section-title">Education</h2>
+	<div class="timeline">
+		<div class="timeline-line"></div>
+		{education.map((edu, index) => (
+			<article class="timeline-item" data-index={index}>
+				<div class="timeline-dot"></div>
+				<div class="timeline-card">
+					<div class="timeline-header">
+						<h3 class="timeline-institution">{edu.institution}</h3>
+						<span class="timeline-dates">{edu.dates}</span>
+					</div>
+					<p class="timeline-degree">{edu.degree}</p>
+					{edu.current && <span class="timeline-badge">In Progress</span>}
+				</div>
+			</article>
+		))}
 	</div>
-	<span class="text-gray-300">Software Testing Processing</span>
 </section>
+
+<script>
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	const items = document.querySelectorAll('.timeline-item');
+
+	gsap.fromTo(
+		'.timeline-line',
+		{ scaleY: 0 },
+		{
+			scaleY: 1,
+			duration: 1,
+			ease: 'power2.out',
+			scrollTrigger: {
+				trigger: '.timeline',
+				start: 'top 80%',
+			},
+		}
+	);
+
+	gsap.fromTo(
+		items,
+		{ opacity: 0, x: -40 },
+		{
+			opacity: 1,
+			x: 0,
+			duration: 0.7,
+			stagger: 0.2,
+			ease: 'power3.out',
+			scrollTrigger: {
+				trigger: '.timeline',
+				start: 'top 75%',
+				toggleActions: 'play none none reverse',
+			},
+		}
+	);
+</script>
+
+<style>
+	.section-title {
+		font-family: 'Space Grotesk', sans-serif;
+		font-size: clamp(2rem, 5vw, 2.5rem);
+		font-weight: 700;
+		color: #fff;
+		margin: 0 0 2.5rem 0;
+	}
+
+	.timeline {
+		position: relative;
+		padding-left: 2rem;
+	}
+
+	.timeline-line {
+		position: absolute;
+		left: 0.5rem;
+		top: 0;
+		width: 2px;
+		height: 100%;
+		background: linear-gradient(
+			to bottom,
+			#93565d,
+			rgba(147, 86, 93, 0.3)
+		);
+		transform-origin: top;
+		border-radius: 1px;
+	}
+
+	.timeline-item {
+		position: relative;
+		padding-left: 2rem;
+		padding-bottom: 2rem;
+	}
+
+	.timeline-item:last-child {
+		padding-bottom: 0;
+	}
+
+	.timeline-dot {
+		position: absolute;
+		left: -1.5rem;
+		top: 1.5rem;
+		width: 1rem;
+		height: 1rem;
+		background: #93565d;
+		border: 3px solid rgba(34, 34, 34, 0.9);
+		border-radius: 50%;
+		box-shadow: 0 0 12px rgba(147, 86, 93, 0.5);
+		z-index: 1;
+	}
+
+	.timeline-card {
+		background: rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 1rem;
+		padding: 1.5rem;
+		transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+	}
+
+	.timeline-card:hover {
+		transform: translateX(8px);
+		box-shadow: 0 8px 30px rgba(147, 86, 93, 0.2);
+		border-color: rgba(147, 86, 93, 0.3);
+	}
+
+	.timeline-header {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	@media (min-width: 640px) {
+		.timeline-header {
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: flex-start;
+		}
+	}
+
+	.timeline-institution {
+		font-family: 'Space Grotesk', sans-serif;
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: #fff;
+		margin: 0;
+	}
+
+	.timeline-institution b {
+		color: #93565d;
+		font-weight: 600;
+	}
+
+	.timeline-dates {
+		font-size: 0.875rem;
+		color: rgba(255, 255, 255, 0.6);
+		white-space: nowrap;
+	}
+
+	.timeline-degree {
+		font-size: 1rem;
+		color: rgba(255, 255, 255, 0.8);
+		margin: 0;
+	}
+
+	.timeline-badge {
+		display: inline-block;
+		margin-top: 1rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: #93565d;
+		background: rgba(147, 86, 93, 0.15);
+		padding: 0.25rem 0.75rem;
+		border-radius: 9999px;
+		border: 1px solid rgba(147, 86, 93, 0.3);
+	}
+</style>
