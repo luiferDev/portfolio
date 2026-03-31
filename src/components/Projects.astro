@@ -7,7 +7,7 @@ const projects = await getCollection('projects');
 
 <section id="projects" class="max-w-[750px] mx-auto mt-12">
 	<article>
-		<h2 class="text-2xl mb-6">Projects</h2>
+		<h2 class="section-title">Projects</h2>
 		{projects.length === 0 ? (
 			<p class="text-gray-400">No projects found</p>
 		) : (
@@ -44,3 +44,13 @@ const projects = await getCollection('projects');
 		});
 	});
 </script>
+
+<style>
+	.section-title {
+		font-family: 'Space Grotesk', sans-serif;
+		font-size: clamp(2rem, 5vw, 2.5rem);
+		font-weight: 700;
+		color: #fff;
+		margin: 0 0 1.5rem 0;
+	}
+</style>
