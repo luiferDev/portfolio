@@ -5,21 +5,68 @@ const contents = await getCollection('contents');
 
 const about = await getEntry('contents', 'about');
 if (!about) {
-	// Handle Error, for example:
 	throw new Error('Could not find about entry');
 }
 
 const { Content } = await render(about);
-
 ---
 
-<section aria-label="about me section of my resume" class="mt-12">
-	{
-		contents.map((content) => {
-			const { data } = content;
-			const { title } = data;
-			return <h2 class="text-2xl mb-4">{title}</h2>;
-		})
-	}
-	<Content />
+<section aria-label="about me section of my resume" class="about max-w-[750px] mx-auto" id="about">
+	<div class="about-container">
+		<h2 class="about-heading">About Me</h2>
+		<div class="about-content">
+			<Content />
+		</div>
+	</div>
 </section>
+
+<script is:inline>
+	document.addEventListener('DOMContentLoaded', () => {
+		if (typeof gsap !== 'undefined') {
+			const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+
+			tl.from('.about-heading', { y: 30, opacity: 0, duration: 0.5 })
+				.from('.about-content', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3');
+		}
+	});
+</script>
+
+<style>
+	.about {
+		min-height: 80vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 2rem 1rem;
+	}
+
+	.about-container {
+		max-width: 750px;
+		width: 100%;
+		padding: 2rem 0;
+	}
+
+	.about-heading {
+		font-family: 'Space Grotesk', sans-serif;
+		font-size: clamp(2rem, 5vw, 2.5rem);
+		font-weight: 700;
+		color: #fff;
+		margin: 0 0 1.5rem 0;
+		line-height: 1.2;
+	}
+
+	.about-content {
+		font-family: 'Inter', sans-serif;
+		font-size: 1.125rem;
+		color: #9ca3af;
+		line-height: 1.8;
+	}
+
+	.about-content :global(p) {
+		margin-bottom: 1rem;
+	}
+
+	.about-content :global(p:last-child) {
+		margin-bottom: 0;
+	}
+</style>
