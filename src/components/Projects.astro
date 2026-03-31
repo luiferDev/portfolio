@@ -1,68 +1,46 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import ProjectCard from './ProjectCard.astro';
 
 const projects = await getCollection('projects');
 ---
 
-<section>
+<section id="projects" class="max-w-[750px] mx-auto mt-12">
 	<article>
-		<h2 class="text-2xl mb-4">Projects</h2>
-		<div class="grid grid-cols-2 gap-6">
-			{
-				projects.map(async (project) => {
-					const { data } = project;
-					const {
-						title,
-						description,
-						frontend,
-						backend,
-						link,
-						github,
-					} = data;
-					const { Content } = await render(project);
-					return (
-						<div class="bg-[#581a21]/30 backdrop-blur-md rounded-xl shadow-lg p-6">
-							<div class="flex flex-row justify-between mb-2">
-								<div>
-									<h3 class="text-lg font-bold">{title}</h3>
-									<span class="text-gray-400">
-										{description}
-									</span>
-								</div>
-								<div class="flex flex-row justify-center items-center gap-4">
-									<a
-										class="flex flex-row items-center gap-1 text-lg text-gray-300 hover:text-white transition-colors"
-										href={link}
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										<Icon name="mdi:web" />
-										<span>visitar</span>
-									</a>
-									<a
-										class="text-2xl text-gray-300 hover:text-white transition-colors"
-										href={github}
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										<Icon name="mdi:github" />
-									</a>
-								</div>
-							</div>
-							<Content />
-							<div class="mb-4 flex flex-row gap-2 items-center">
-								<i class="bg-[#581a21] px-2 py-1 rounded-md">
-									{frontend}
-								</i>
-								<i class="bg-[#581a21] px-2 py-1 rounded-md">
-									{backend}
-								</i>
-							</div>
-						</div>
-					);
-				})
-			}
-		</div>
+		<h2 class="text-2xl mb-6">Projects</h2>
+		{projects.length === 0 ? (
+			<p class="text-gray-400">No projects found</p>
+		) : (
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+				{
+					projects.map((project, index) => {
+						const { data, id } = project;
+						return (
+							<ProjectCard
+								id={id}
+								title={data.title}
+								description={data.description}
+								image={data.image}
+								technologies={data.technologies}
+								link={data.link}
+								github={data.github}
+								index={index}
+							/>
+						);
+					})
+				}
+			</div>
+		)}
 	</article>
 </section>
+
+<script>
+	// Simple animation without ScrollTrigger dependency
+	document.addEventListener('DOMContentLoaded', () => {
+		const cards = document.querySelectorAll('[data-gsap-project]');
+		cards.forEach((card, index) => {
+			(card as HTMLElement).style.opacity = '1';
+			(card as HTMLElement).style.transform = 'translateY(0)';
+		});
+	});
+</script>
