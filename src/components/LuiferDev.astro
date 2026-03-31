@@ -1,64 +1,253 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { Image } from 'astro:assets';
-
-import luiferdev from '../../public/luiferdev.jpg';
 ---
 
-<section class="flex flex-row justify-between gap-16 mt-9">
-	<div>
-		<h1 class="mb-4 text-2xl">Jorge Luis Morales Cruz</h1>
-		<p class="text-gray-300 mb-2">
-			I'm a passionate software developer with a strong foundation in
-			full-stack development, particularly in backend technologies like
-			.NET Framework. I am currently seeking an internship opportunity in
-			QA testing to further enhance my skills and gain practical
-			experience in the tech industry.
-		</p>
-		<div class="flex flex-row items-center gap-2">
-			<Icon name="mdi:planet" class="text-[#93565d]" />
-			<span>Medellín, Colombia</span>
+<section class="hero" id="hero">
+	<div class="hero-panel">
+		<div class="hero-content">
+			<span class="hero-greeting">Hi, I'm</span>
+			<h1 class="hero-name">LuiferDev</h1>
+			<p class="hero-role">Full Stack Developer</p>
+			<p class="hero-tagline">Building digital experiences with code and creativity</p>
+			<div class="hero-cta">
+				<a href="#projects" class="btn-primary">View My Work</a>
+				<a href="#contact" class="btn-secondary">Contact Me</a>
+			</div>
 		</div>
-		<div class="flex flex-row items-center gap-2 mt-2">
-			<a
-				href="https://github.com/luiferDev"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="GitHub Profile"
-			>
-				<Icon
-					name="mdi:github"
-					class="text-2xl text-gray-300 hover:text-white transition-colors"
-				/>
-			</a>
-			<a
-				href="https://www.linkedin.com/in/jorge-morales-cruz/"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="LinkedIn Profile"
-			>
-				<Icon
-					name="mdi:linkedin"
-					class="text-2xl text-gray-300 hover:text-white transition-colors"
-				/>
-			</a>
-			<a
-				href="mailto:luifer991@protonmail.com"
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="email"
-			>
-				<Icon
-					name="mdi:email"
-					class="text-2xl text-gray-300 hover:text-white transition-colors"
-				/>
-			</a>
+		<div class="hero-image-container">
+			<div class="hero-image-glow"></div>
+			<img src="/luiferdev.jpg" alt="LuiferDev" class="hero-image" />
 		</div>
 	</div>
-	<Image
-		class="rounded-lg aspect-video w-[160px]"
-		src={luiferdev}
-		alt="Jorge Luis Morales Cruz"
-		loading="eager"
-	/>
 </section>
+
+<script is:inline>
+	document.addEventListener('DOMContentLoaded', () => {
+		if (typeof gsap !== 'undefined') {
+			const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+
+			// Split name into letters for staggered animation
+			const nameElement = document.querySelector('.hero-name');
+			if (nameElement) {
+				const nameText = nameElement.textContent;
+				nameElement.innerHTML = nameText
+					.split('')
+					.map((char) => `<span class="hero-name-char">${char}</span>`)
+					.join('');
+				
+				tl.from('.hero-greeting', { y: 30, opacity: 0, duration: 0.5 })
+					.from('.hero-name-char', { 
+						y: 30, 
+						opacity: 0, 
+						duration: 0.05, 
+						stagger: 0.03 
+					}, '-=0.3')
+					.from('.hero-role', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
+					.from('.hero-tagline', { y: 30, opacity: 0, duration: 0.5 }, '-=0.3')
+					.from('.hero-cta', { y: 20, opacity: 0, duration: 0.6 }, '-=0.3')
+					.from('.hero-image', { scale: 0.8, opacity: 0, duration: 0.6, ease: 'back.out' }, '-=0.4');
+			}
+
+			// Image hover glow pulse
+			const imageContainer = document.querySelector('.hero-image-container');
+			const imageGlow = document.querySelector('.hero-image-glow');
+			
+			if (imageContainer && imageGlow) {
+				imageContainer.addEventListener('mouseenter', () => {
+					gsap.to(imageGlow, {
+						boxShadow: '0 0 80px rgba(147, 86, 93, 0.6)',
+						duration: 0.3,
+						ease: 'power2.out'
+					});
+					gsap.to(imageContainer.querySelector('.hero-image'), {
+						scale: 1.05,
+						duration: 0.3,
+						ease: 'power2.out'
+					});
+				});
+				
+				imageContainer.addEventListener('mouseleave', () => {
+					gsap.to(imageGlow, {
+						boxShadow: '0 0 60px rgba(147, 86, 93, 0.4)',
+						duration: 0.3,
+						ease: 'power2.out'
+					});
+					gsap.to(imageContainer.querySelector('.hero-image'), {
+						scale: 1,
+						duration: 0.3,
+						ease: 'power2.out'
+					});
+				});
+			}
+		}
+	});
+</script>
+
+<style>
+	.hero {
+		min-height: calc(100vh - 5rem);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 2rem 1rem;
+	}
+
+	.hero-panel {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		gap: 3rem;
+		max-width: 800px;
+		width: 100%;
+		padding: 2rem;
+		background: rgba(255, 255, 255, 0.03);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 24px;
+		box-shadow: 
+			0 0 60px rgba(147, 86, 93, 0.08),
+			0 25px 50px rgba(0, 0, 0, 0.3);
+	}
+
+	.hero-content {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.hero-greeting {
+		font-family: 'Inter', sans-serif;
+		font-size: 1rem;
+		color: #9ca3af;
+		font-weight: 400;
+	}
+
+	.hero-name {
+		font-family: 'Space Grotesk', sans-serif;
+		font-size: clamp(2rem, 5vw, 3rem);
+		font-weight: 700;
+		color: #fff;
+		margin: 0;
+		line-height: 1.1;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.hero-name-char {
+		display: inline-block;
+	}
+
+	.hero-role {
+		font-family: 'Inter', sans-serif;
+		font-size: 1.125rem;
+		color: var(--palette-accent);
+		font-weight: 500;
+		margin: 0.25rem 0;
+	}
+
+	.hero-tagline {
+		font-family: 'Inter', sans-serif;
+		font-size: 1rem;
+		color: #9ca3af;
+		margin: 0.5rem 0 1.5rem;
+		max-width: 400px;
+	}
+
+	.hero-cta {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+	}
+
+	.btn-primary,
+	.btn-secondary {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		font-family: 'Inter', sans-serif;
+		font-size: 0.75rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	.btn-primary {
+		background: var(--palette-accent);
+		color: #fff;
+	}
+
+	.btn-primary:hover {
+		background: #7a4750;
+		transform: translateY(-2px);
+		box-shadow: 0 10px 20px rgba(147, 86, 93, 0.3);
+	}
+
+	.btn-secondary {
+		background: transparent;
+		color: #fff;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+	}
+
+	.btn-secondary:hover {
+		border-color: rgba(255, 255, 255, 0.6);
+		background: rgba(255, 255, 255, 0.05);
+		transform: translateY(-2px);
+	}
+
+	.hero-image-container {
+		position: relative;
+		flex-shrink: 0;
+	}
+
+	.hero-image-glow {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 100%;
+		height: 100%;
+		background: radial-gradient(circle, rgba(147, 86, 93, 0.4) 0%, transparent 70%);
+		border-radius: 50%;
+		filter: blur(30px);
+		z-index: -1;
+	}
+
+	.hero-image {
+		width: 350px;
+		height: 350px;
+		object-fit: cover;
+		border-radius: 1rem;
+		border: 2px solid rgba(255, 255, 255, 0.1);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+		transition: transform 0.3s ease;
+	}
+
+	@media (max-width: 768px) {
+		.hero-panel {
+			flex-direction: column-reverse;
+			text-align: center;
+			gap: 2rem;
+		}
+
+		.hero-content {
+			align-items: center;
+		}
+
+		.hero-tagline {
+			max-width: 100%;
+		}
+
+		.hero-cta {
+			justify-content: center;
+		}
+
+		.hero-image {
+			width: 280px;
+			height: 280px;
+		}
+	}
+</style>
