@@ -2,33 +2,380 @@
 import { getCollection, render } from 'astro:content';
 
 const experiences = await getCollection('experiences');
+
+// Sort experiences by date (most recent first)
+const sortedExperiences = [...experiences].sort((a, b) => {
+  const dateA = new Date(a.data.initial);
+  const dateB = new Date(b.data.initial);
+  return dateB.getTime() - dateA.getTime();
+});
 ---
 
-<section aria-label="experience section of my resume">
-	<h2 class="text-2xl mb-4">Experience</h2>
-
-	{
-		experiences.map(async (experience) => {
-			const { data } = experience;
-			const { company, work, role, initial, final } = data;
-			const { Content } = await render(experience);
-			return (
-				<div class="mb-4">
-					<div class="flex flex-row justify-between">
-						<h3 class="text-md font-bold mb-0!">
-							{company}
-							<span class="text-xs bg-[#581a21] p-1 rounded-sm hover:bg-[#93565d] ml-1">
-								{work}
-							</span>
-						</h3>
-						<p class="text-gray-300">
-							{initial} - {final}
-						</p>
+<section aria-label="experience section of my resume" class="experience max-w-[750px] mx-auto" id="experience">
+	<h2 class="section-title">Experience</h2>
+	
+	<div class="timeline">
+		<div class="timeline-track">
+			<!-- Reloj animado -->
+			<div class="timeline-clock">
+				<svg viewBox="0 0 60 60" class="clock-svg">
+					<!-- Círculo exterior -->
+					<circle cx="30" cy="30" r="26" class="clock-ring"/>
+					<!-- Marcadores -->
+					<line x1="30" y1="6" x2="30" y2="10" class="clock-marker"/>
+					<line x1="30" y1="50" x2="30" y2="54" class="clock-marker"/>
+					<line x1="6" y1="30" x2="10" y2="30" class="clock-marker"/>
+					<line x1="50" y1="30" x2="54" y2="30" class="clock-marker"/>
+					<!-- Manecilla hora (GRANDE - más rápida) -->
+					<g class="hour-hand-group">
+						<line x1="30" y1="30" x2="30" y2="14" class="clock-hand hour-hand"/>
+					</g>
+					<!-- Manecilla minuto (CHICA - más lenta) -->
+					<g class="minute-hand-group">
+						<line x1="30" y1="30" x2="38" y2="30" class="clock-hand minute-hand"/>
+					</g>
+					<!-- Centro -->
+					<circle cx="30" cy="30" r="2.5" class="clock-center"/>
+				</svg>
+			</div>
+		</div>
+		
+		{
+			sortedExperiences.map(async (experience, index) => {
+				const { data } = experience;
+				const { company, work, role, initial, final } = data;
+				const { Content } = await render(experience);
+				return (
+					<div class="timeline-item" data-index={index}>
+						<div class="timeline-dot"></div>
+						<div class="experience-card">
+							<div class="card-header">
+								<div class="company-row">
+									<h3 class="company-name">{company}</h3>
+									<span class="work-badge">{work}</span>
+								</div>
+								<p class="role">{role}</p>
+								<p class="dates">{initial} - {final}</p>
+							</div>
+							<div class="card-content">
+								<Content />
+							</div>
+						</div>
 					</div>
-					<p class="text-white! mt-0!">{role}</p>
-					<Content />
-				</div>
-			);
-		})
-	}
+				);
+			})
+		}
+	</div>
 </section>
+
+<script is:inline>
+	document.addEventListener('DOMContentLoaded', () => {
+		if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+			gsap.registerPlugin(ScrollTrigger);
+			
+			const clock = document.querySelector('.timeline-clock');
+			const track = document.querySelector('.timeline-track');
+			const hourHandGroup = document.querySelector('.hour-hand-group');
+			const minuteHandGroup = document.querySelector('.minute-hand-group');
+			
+			if (clock && track && hourHandGroup && minuteHandGroup) {
+				const trackHeight = track.offsetHeight;
+				
+				// El reloj baja por el timeline
+				gsap.fromTo(clock, 
+					{ y: -50 },
+					{ 
+						y: trackHeight - 40,
+						ease: 'none',
+						scrollTrigger: {
+							trigger: '.experience',
+							start: 'top center',
+							end: 'bottom center',
+							scrub: 1
+						}
+					}
+				);
+				
+				// Manecilla HORA (grande): gira MUY rápido -1080° (3 vueltas completas)
+				// La más grande y rápida
+				gsap.to({}, {
+					scrollTrigger: {
+						trigger: '.experience',
+						start: 'top center',
+						end: 'bottom center',
+						scrub: 1,
+						onUpdate: (self) => {
+							const hourRotation = -1080 * self.progress;
+							hourHandGroup.style.transform = `rotate(${hourRotation}deg)`;
+							hourHandGroup.style.transformOrigin = '30px 30px';
+						}
+					}
+				});
+				
+				// Manecilla MINUTO (chica): gira más lento -180° (media vuelta)
+				// La más pequeña y lenta
+				gsap.to({}, {
+					scrollTrigger: {
+						trigger: '.experience',
+						start: 'top center',
+						end: 'bottom center',
+						scrub: 1,
+						onUpdate: (self) => {
+							const minuteRotation = -180 * self.progress;
+							minuteHandGroup.style.transform = `rotate(${minuteRotation}deg)`;
+							minuteHandGroup.style.transformOrigin = '30px 30px';
+						}
+					}
+				});
+			}
+			
+			// Cards entrance
+			gsap.from('.timeline-item', {
+				y: 15,
+				opacity: 0,
+				duration: 0.25,
+				stagger: 0.08,
+				ease: 'power2.out',
+				scrollTrigger: {
+					trigger: '.experience',
+					start: 'top 80%'
+				}
+			});
+		}
+	});
+</script>
+
+<style>
+	.experience {
+		min-height: 100vh;
+		padding: 2rem 1rem;
+		position: relative;
+	}
+
+	.section-title {
+		font-family: 'Space Grotesk', sans-serif;
+		font-size: clamp(2rem, 5vw, 2.5rem);
+		font-weight: 700;
+		color: #fff;
+		text-align: center;
+		margin: 0 0 1.5rem 0;
+	}
+
+	.timeline {
+		position: relative;
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 0.5rem 0;
+	}
+
+	.timeline-track {
+		position: absolute;
+		left: 50%;
+		top: 0;
+		bottom: 0;
+		width: 60px;
+		transform: translateX(-50%);
+		z-index: 0;
+		pointer-events: none;
+	}
+
+	.timeline-clock {
+		position: absolute;
+		left: 50%;
+		top: 0;
+		transform: translateX(-50%);
+		width: 40px;
+		height: 40px;
+		filter: drop-shadow(0 0 10px rgba(147, 86, 93, 0.9)) drop-shadow(0 0 20px rgba(147, 86, 93, 0.4));
+	}
+
+	.clock-svg {
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+
+	.clock-ring {
+		fill: rgba(147, 86, 93, 0.15);
+		stroke: #93565d;
+		stroke-width: 2;
+	}
+
+	.clock-marker {
+		stroke: #c4a35a;
+		stroke-width: 2;
+		stroke-linecap: round;
+	}
+
+	/* Grupos de manecillas */
+	.hour-hand-group,
+	.minute-hand-group {
+		transform-origin: 30px 30px;
+		transition: transform 0.05s linear;
+	}
+
+	.clock-hand {
+		stroke: #fff;
+		stroke-linecap: round;
+	}
+
+	.hour-hand-group .clock-hand {
+		stroke-width: 3.5;
+	}
+
+	.minute-hand-group .clock-hand {
+		stroke-width: 1.5;
+		opacity: 0.6;
+	}
+
+	.clock-center {
+		fill: #fff;
+		filter: drop-shadow(0 0 3px #fff);
+	}
+
+	.timeline-item {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+		margin-bottom: 1rem;
+		z-index: 2;
+	}
+
+	.timeline-dot {
+		position: absolute;
+		left: 50%;
+		top: 14px;
+		width: 8px;
+		height: 8px;
+		background: #c4a35a;
+		border-radius: 50%;
+		transform: translateX(-50%);
+		border: 2px solid #222;
+		z-index: 3;
+		box-shadow: 0 0 10px rgba(196, 163, 90, 0.6);
+	}
+
+	.experience-card {
+		width: 42%;
+		background: rgba(255, 255, 255, 0.015);
+		border: 1px solid rgba(147, 86, 93, 0.12);
+		border-radius: 10px;
+		padding: 0.75rem;
+		transition: all 0.25s ease;
+	}
+
+	.experience-card:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 8px 25px rgba(147, 86, 93, 0.2);
+		border-color: rgba(147, 86, 93, 0.35);
+		background: rgba(147, 86, 93, 0.03);
+	}
+
+	.timeline-item:nth-child(odd) .experience-card {
+		margin-right: auto;
+		text-align: right;
+	}
+
+	.timeline-item:nth-child(even) .experience-card {
+		margin-left: auto;
+		text-align: left;
+	}
+
+	.card-header {
+		margin-bottom: 0.4rem;
+	}
+
+	.company-row {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		flex-wrap: wrap;
+		justify-content: inherit;
+	}
+
+	.company-name {
+		font-family: 'Space Grotesk', sans-serif;
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: #fff;
+		margin: 0;
+	}
+
+	.work-badge {
+		font-family: 'Inter', sans-serif;
+		font-size: 0.5rem;
+		font-weight: 500;
+		color: #fff;
+		background: #93565d;
+		padding: 0.1rem 0.3rem;
+		border-radius: 2px;
+		text-transform: uppercase;
+		letter-spacing: 0.2px;
+	}
+
+	.role {
+		font-family: 'Inter', sans-serif;
+		font-size: 0.7rem;
+		font-weight: 400;
+		color: #cbd5e1;
+		margin: 0.25rem 0 0.05rem 0;
+	}
+
+	.dates {
+		font-family: 'Inter', sans-serif;
+		font-size: 0.6rem;
+		color: #64748b;
+		margin: 0;
+	}
+
+	.card-content {
+		font-family: 'Inter', sans-serif;
+		font-size: 0.65rem;
+		color: #94a3b8;
+		line-height: 1.35;
+	}
+
+	.card-content :global(ul) {
+		margin: 0;
+		padding-left: 0.8rem;
+	}
+
+	.card-content :global(li) {
+		margin-bottom: 0.15rem;
+	}
+
+	.card-content :global(li:last-child) {
+		margin-bottom: 0;
+	}
+
+	/* Mobile */
+	@media (max-width: 768px) {
+		.timeline-track {
+			left: 10px;
+			width: 40px;
+		}
+
+		.timeline-clock {
+			left: 10px;
+			width: 32px;
+			height: 32px;
+		}
+
+		.timeline-dot {
+			left: 10px;
+			top: 10px;
+		}
+
+		.experience-card {
+			width: calc(100% - 30px);
+			margin-left: 30px !important;
+			text-align: left !important;
+			padding: 0.6rem;
+		}
+
+		.company-row {
+			justify-content: flex-start;
+		}
+	}
+</style>
