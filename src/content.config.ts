@@ -40,6 +40,12 @@ const experiences = defineCollection({
 	}),
 });
 
+enum projectStatus {
+	Completed = 'Completed',
+	InProgress = 'InProgress',
+	Planned = 'Planned',
+}
+
 const projects = defineCollection({
 	loader: glob({
 		pattern: '**/*.md',
@@ -48,10 +54,24 @@ const projects = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
+		fullDescription: z.string(),
+		image: z.string(),
+		technologies: z.array(z.string()),
+		features: z.array(z.string()),
+		status: z
+			.string()
+			.refine(
+				(val) => Object.values(projectStatus).includes(val as projectStatus),
+				{
+					message:
+						'Status must be one of Completed, InProgress, or Planned.',
+				}
+			),
+		year: z.number(),
 		frontend: z.string().optional(),
 		backend: z.string().optional(),
 		link: z.string().url().optional(),
-		github: z.string().url(),
+		github: z.string().url().optional(),
 	}),
 });
 
