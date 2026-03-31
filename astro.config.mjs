@@ -7,6 +7,8 @@ import icon from 'astro-icon';
 
 import sitemap from '@astrojs/sitemap';
 
+import sentryAstro from '@sentry/astro';
+
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://luiferdev.com',
@@ -21,5 +23,16 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 
-	integrations: [icon(), sitemap()],
+	integrations: [
+		icon(),
+		sitemap(),
+		sentryAstro({
+			// Sentry options
+			sourceMapsUploadOptions: {
+				org: process.env.SENTRY_ORG,
+				project: process.env.SENTRY_PROJECT,
+				authToken: process.env.SENTRY_AUTH_TOKEN,
+			},
+		}),
+	],
 });
