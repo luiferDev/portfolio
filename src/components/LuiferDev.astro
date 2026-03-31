@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import luiferdev from '../../public/luiferdev.jpg';
 ---
 
 <section class="hero" id="hero">
@@ -15,7 +17,7 @@
 		</div>
 		<div class="hero-image-container">
 			<div class="hero-image-glow"></div>
-			<img src="/luiferdev.jpg" alt="LuiferDev" class="hero-image" />
+			<Image src={luiferdev} alt="LuiferDev" class="hero-image" loading="eager" />
 		</div>
 	</div>
 </section>
