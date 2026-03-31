@@ -95,7 +95,8 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
 
 <script is:inline>
   // Global state to track PS5 animation initialization
-  window.ps5AnimationInitialized = false;
+  // Use a flag to prevent double-initialization
+  window.ps5AnimationInitialized = window.ps5AnimationInitialized || false;
   
   // Use astro:page-load to handle View Transitions
   function initAnimations() {
@@ -107,7 +108,6 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
     
     const palette = ['#93565d', '#ffffff', '#000000'];
     let colorIndex = 0;
-    let animationInterval = null;
     let currentTween1 = null;
     let currentTween2 = null;
     
@@ -120,10 +120,7 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
       return;
     }
     
-    // Clean up any existing animation
-    if (animationInterval) {
-      clearInterval(animationInterval);
-    }
+    // Clean up any existing tweens
     if (currentTween1) {
       currentTween1.kill();
     }
@@ -131,8 +128,9 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
       currentTween2.kill();
     }
     
-    // Entry animation - only on first load
-    if (!window.ps5AnimationInitialized) {
+    // Entry animation - only on first page load (not on view transitions)
+    const isFirstLoad = !window.ps5AnimationInitialized;
+    if (isFirstLoad) {
       gsap.from('.floating-pill', {
         y: -20,
         opacity: 0,
@@ -150,7 +148,7 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
       window.ps5AnimationInitialized = true;
     }
     
-    // Continuous color animation
+    // Always start the continuous color animation
     function animatePS5Button() {
       if (!ps5Button || !powerIcon) return;
       
@@ -213,11 +211,24 @@ const homeUrl = currentLang === defaultLang ? '/' : `/${currentLang}/`;
     });
   }
 
-  // Initialize on first load - delay to ensure GSAP is loaded
-  setTimeout(initAnimations, 100);
+  // Wait for GSAP to be available before initializing
+  function waitForGSAP() {
+    if (typeof gsap === 'undefined') {
+      setTimeout(waitForGSAP, 50);
+      return;
+    }
+    initAnimations();
+  }
   
-  // Re-initialize on View Transition navigation
-  document.addEventListener('astro:page-load', initAnimations);
+  // Initialize on first load - wait for GSAP to load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForGSAP);
+  } else {
+    waitForGSAP();
+  }
+  
+  // Also initialize on View Transition navigation
+  document.addEventListener('astro:page-load', waitForGSAP);
   
   // Mobile menu functionality
   const hamburgerBtn = document.querySelector('.hamburger-btn');
