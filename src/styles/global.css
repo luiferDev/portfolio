@@ -14,12 +14,11 @@ p {
 }
 
 body {
-	@apply grid place-content-center;
+	@apply grid;
+	min-width: 100vw;
 }
 
-body > div {
-	@apply container;
-}
+/* body > div container handled in components individually */
 
 section {
 	@apply mt-12;
