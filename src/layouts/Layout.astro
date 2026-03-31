@@ -3,7 +3,20 @@ import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import { ClientRouter } from 'astro:transitions';
 
-const { title } = Astro.props;
+interface Props {
+	title: string;
+	description?: string;
+	image?: string;
+}
+
+const { 
+	title, 
+	description = "Full Stack Developer specializing in React, TypeScript, .NET, and modern web technologies. Building digital experiences with code and creativity.",
+	image = "/og-image.jpg" 
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const siteURL = Astro.site || 'https://luiferdev.com';
 ---
 
 <!doctype html>
@@ -13,7 +26,64 @@ const { title } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
+		
+		<!-- SEO Meta Tags -->
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="keywords" content="Full Stack Developer, React, TypeScript, .NET, Java, Portfolio, Web Developer, Medellín" />
+		<link rel="canonical" href={canonicalURL} />
+		
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(image, siteURL)} />
+		
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalURL} />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={new URL(image, siteURL)} />
+		
+		<!-- Sitemap -->
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		
+		<!-- Structured Data - Person -->
+		<script type="application/ld+json" set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Jorge Luis Morales Cruz",
+			"alternateName": "LuiferDev",
+			"jobTitle": "Full Stack Developer",
+			"url": siteURL,
+			"description": description,
+			"knowsAbout": ["React", "TypeScript", ".NET", "Java", "Spring Boot", "Astro", "Node.js"],
+			"address": {
+				"@type": "PostalAddress",
+				"addressLocality": "Medellín",
+				"addressCountry": "Colombia"
+			},
+			"sameAs": [
+				"https://github.com/luiferDev",
+				"https://www.linkedin.com/in/jorge-morales-cruz/"
+			]
+		})} />
+		
+		<!-- Structured Data - WebSite -->
+		<script type="application/ld+json" set:html={JSON.stringify({
+			"@context": "https://schema.org",
+			"@type": "WebSite",
+			"name": "LuiferDev Portfolio",
+			"url": siteURL,
+			"description": description,
+			"author": {
+				"@type": "Person",
+				"name": "Jorge Luis Morales Cruz"
+			}
+		})} />
+		
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
