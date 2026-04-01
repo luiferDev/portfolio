@@ -1,0 +1,128 @@
+---
+import Layout from '../../app/layout/Layout.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import { useTranslations } from '../../shared/config/i18n';
+import { getStaticPaths } from 'astro';
+
+// Generate static paths for all locales
+export function getStaticPaths() {
+  return [
+    { params: { locale: 'es' } },
+    { params: { locale: 'en' } },
+    { params: { locale: 'fr' } },
+  ];
+}
+
+const { locale } = Astro.params;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
+---
+
+<Layout 
+  title={`${t.contact.title} | LuiferDev`}
+  description={t.contact.subtitle}
+  locale={locale}
+>
+  <section class="contact-section" id="contact">
+    <div class="contact-container">
+      <div class="contact-header">
+        <h1 class="contact-title">{t.contact.title}</h1>
+        <p class="contact-subtitle">{t.contact.subtitle}</p>
+      </div>
+      
+      <div class="contact-form-wrapper">
+        <ContactForm locale={locale} />
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .contact-section {
+    min-height: calc(100vh - 5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    position: relative;
+  }
+
+  .contact-container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .contact-header {
+    text-align: center;
+  }
+
+  .contact-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .contact-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.125rem;
+    color: #9ca3af;
+    margin: 1rem 0 0;
+  }
+
+  .contact-form-wrapper {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 
+      0 0 60px rgba(147, 86, 93, 0.08),
+      0 25px 50px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: 640px) {
+    .contact-form-wrapper {
+      padding: 1.5rem;
+    }
+  }
+</style>
+
+<script is:inline>
+  // GSAP entrance animation for contact page
+  function initContactAnimations() {
+    if (typeof gsap === 'undefined') {
+      setTimeout(initContactAnimations, 100);
+      return;
+    }
+    
+    const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+    
+    tl.from('.contact-title', {
+      y: 30,
+      opacity: 0,
+      duration: 0.6
+    })
+    .from('.contact-subtitle', {
+      y: 20,
+      opacity: 0,
+      duration: 0.5
+    }, '-=0.3')
+    .from('.contact-form-wrapper', {
+      y: 25,
+      opacity: 0,
+      duration: 0.6
+    }, '-=0.3');
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initContactAnimations);
+  } else {
+    initContactAnimations();
+  }
+</script>

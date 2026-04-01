@@ -1,0 +1,346 @@
+---
+import { useTranslations } from '../shared/config/i18n';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale = 'es' } = Astro.props;
+const t = useTranslations(locale as 'es' | 'en' | 'fr');
+---
+
+<form class="contact-form" id="contact-form">
+  <!-- Honeypot field - hidden from users, bots will fill it -->
+  <input 
+    type="text" 
+    name="honeypot" 
+    class="honeypot" 
+    tabindex="-1" 
+    autocomplete="off"
+  />
+  
+  <div class="form-row">
+    <div class="form-group">
+      <label for="name">{t.contact.form.name}</label>
+      <div class="input-wrapper">
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          placeholder={t.contact.form.namePlaceholder}
+          required
+          autocomplete="given-name"
+        />
+        <span class="input-focus-line"></span>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="lastname">{t.contact.form.lastname}</label>
+      <div class="input-wrapper">
+        <input 
+          type="text" 
+          id="lastname" 
+          name="lastname" 
+          placeholder={t.contact.form.lastnamePlaceholder}
+          required
+          autocomplete="family-name"
+        />
+        <span class="input-focus-line"></span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="email">{t.contact.form.email}</label>
+    <div class="input-wrapper">
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        placeholder={t.contact.form.emailPlaceholder}
+        required
+        autocomplete="email"
+      />
+      <span class="input-focus-line"></span>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="message">{t.contact.form.message}</label>
+    <div class="input-wrapper textarea-wrapper">
+      <textarea 
+        id="message" 
+        name="message" 
+        placeholder={t.contact.form.messagePlaceholder}
+        required
+        rows="5"
+      ></textarea>
+      <span class="input-focus-line"></span>
+    </div>
+  </div>
+  
+  <button type="submit" class="submit-btn">
+    <span class="btn-text">{t.contact.form.submit}</span>
+    <span class="btn-loader"></span>
+  </button>
+  
+  <div class="form-status" id="form-status"></div>
+</form>
+
+<style>
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  /* Honeypot - hidden from users */
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #d1d5db;
+  }
+
+  .input-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .input-wrapper input,
+  .input-wrapper textarea {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .input-wrapper input::placeholder,
+  .input-wrapper textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .input-wrapper textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+
+  /* PS5-style focus effect - border travels across input */
+  .input-focus-line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #93565d;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 0 0.75rem 0.75rem;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: transparent;
+  }
+
+  .input-wrapper input:focus,
+  .input-wrapper textarea:focus {
+    border-color: rgba(147, 86, 93, 0.5);
+    background: rgba(147, 86, 93, 0.05);
+    box-shadow: 0 0 20px rgba(147, 86, 93, 0.15);
+  }
+
+  .input-wrapper:focus-within .input-focus-line {
+    left: 0;
+    width: 100%;
+  }
+
+  /* Neon glow effect on focus */
+  .input-wrapper:focus-within {
+    box-shadow: 0 0 15px rgba(147, 86, 93, 0.3);
+  }
+
+  /* Submit button */
+  .submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: #93565d;
+    color: #fff;
+    border: none;
+    border-radius: 0.75rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-btn:hover {
+    background: #7a4750;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(147, 86, 93, 0.4);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Loading spinner */
+  .btn-loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  .submit-btn.loading .btn-loader {
+    display: block;
+  }
+
+  .submit-btn.loading .btn-text {
+    opacity: 0.7;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Form status messages */
+  .form-status {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    display: none;
+  }
+
+  .form-status.success {
+    display: block;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+  }
+
+  .form-status.error {
+    display: block;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+  }
+
+  /* Input validation styles */
+  .input-wrapper input:invalid:not(:placeholder-shown),
+  .input-wrapper textarea:invalid:not(:placeholder-shown) {
+    border-color: rgba(239, 68, 68, 0.5);
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const submitBtn = form?.querySelector('.submit-btn') as HTMLButtonElement;
+  const statusDiv = document.getElementById('form-status');
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Get form data
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        lastname: formData.get('lastname'),
+        email: formData.get('email'),
+        message: formData.get('message'),
+        honeypot: formData.get('honeypot'),
+      };
+
+      // Validate honeypot
+      if (data.honeypot && (data.honeypot as string).length > 0) {
+        // Silent fail - don't let bot know it was caught
+        statusDiv!.textContent = '';
+        statusDiv!.className = 'form-status';
+        return;
+      }
+
+      // Show loading state
+      submitBtn!.classList.add('loading');
+      submitBtn!.disabled = true;
+
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          statusDiv!.textContent = result.message;
+          statusDiv!.className = 'form-status success';
+          form.reset();
+        } else {
+          statusDiv!.textContent = result.message || 'Error sending message';
+          statusDiv!.className = 'form-status error';
+        }
+      } catch (error) {
+        statusDiv!.textContent = 'Error sending message. Please try again.';
+        statusDiv!.className = 'form-status error';
+      } finally {
+        submitBtn!.classList.remove('loading');
+        submitBtn!.disabled = false;
+      }
+    });
+  }
+</script>

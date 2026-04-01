@@ -11,10 +11,40 @@ const { locale } = Astro.props;
 const currentLang = locale || getLangFromUrl(Astro.url);
 const currentPath = Astro.url.pathname;
 const currentHash = Astro.url.hash;
-const currentUrl = Astro.url.href;
+
+// Build language options
+const langOptions = Object.entries(languages).map(([lang, label]) => {
+  // Build target URL based on current path
+  let targetPath: string;
+  
+  if (currentPath.startsWith('/projects/')) {
+    // For project pages, preserve the project slug
+    const projectMatch = currentPath.match(/^\/projects\/[^/]+\/(.+)$/);
+    if (projectMatch) {
+      targetPath = lang === defaultLang ? `/projects/${projectMatch[1]}` : `/projects/${lang}/${projectMatch[1]}`;
+    } else {
+      targetPath = lang === defaultLang ? '/' : `/${lang}/`;
+    }
+  } else if (currentPath.startsWith('/contact')) {
+    // For contact page
+    targetPath = lang === defaultLang ? '/contact' : `/${lang}/contact`;
+  } else if (currentPath === '/') {
+    // Home page
+    targetPath = lang === defaultLang ? '/' : `/${lang}/`;
+  } else {
+    // Other pages
+    targetPath = lang === defaultLang ? '/' : `/${lang}/`;
+  }
+  
+  const targetUrl = `${new URL(targetPath, Astro.site).pathname}${currentHash}`;
+  const isCurrent = lang === currentLang;
+  
+  return { lang, label, targetUrl, isCurrent };
+});
 ---
 
-<div class="lang-switcher-container">
+<!-- Desktop Dropdown Version -->
+<div class="lang-switcher-container desktop-lang">
   <button 
     class="lang-switcher-btn" 
     aria-label="Select language"
@@ -29,45 +59,39 @@ const currentUrl = Astro.url.href;
   </button>
   
   <div class="lang-dropdown">
-    {Object.entries(languages).map(([lang, label]) => {
-      // Build target URL based on current path
-      let targetPath: string;
-      if (currentPath.startsWith('/projects/')) {
-        // For project pages, preserve the project slug
-        const projectMatch = currentPath.match(/^\/projects\/[^/]+\/(.+)$/);
-        if (projectMatch) {
-          targetPath = lang === defaultLang ? `/projects/${projectMatch[1]}` : `/projects/${lang}/${projectMatch[1]}`;
-        } else {
-          targetPath = lang === defaultLang ? '/' : `/${lang}/`;
-        }
-      } else {
-        // For regular pages
-        targetPath = lang === defaultLang ? '/' : `/${lang}/`;
-      }
-      
-      const targetUrl = `${new URL(targetPath, Astro.site).pathname}${currentHash}`;
-      const isCurrent = lang === currentLang;
-      
-      return (
-        <a
-          href={isCurrent ? targetUrl : targetUrl}
-          class={`lang-option ${isCurrent ? 'active' : ''}`}
-          data-lang={lang}
-          aria-label={`Switch to ${label}`}
-        >
-          <span class="flag">{languagesFlags[lang as keyof typeof languagesFlags]}</span>
-          <span class="label">{label}</span>
-        </a>
-      );
-    })}
+    {langOptions.map(opt => (
+      <a
+        href={opt.targetUrl}
+        class={`lang-option ${opt.isCurrent ? 'active' : ''}`}
+        data-lang={opt.lang}
+        aria-label={`Switch to ${opt.label}`}
+      >
+        <span class="flag">{languagesFlags[opt.lang as keyof typeof languagesFlags]}</span>
+        <span class="label">{opt.label}</span>
+      </a>
+    ))}
   </div>
+</div>
+
+<!-- Mobile Separate Buttons Version - Flags Only -->
+<div class="lang-switcher-mobile mobile-lang">
+  {langOptions.map(opt => (
+    <a
+      href={opt.targetUrl}
+      class={`lang-btn ${opt.isCurrent ? 'active' : ''}`}
+      data-lang={opt.lang}
+      aria-label={`Switch to ${opt.label}`}
+    >
+      <span class="flag">{languagesFlags[opt.lang as keyof typeof languagesFlags]}</span>
+    </a>
+  ))}
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('.lang-switcher-container');
-    const btn = document.querySelector('.lang-switcher-btn');
-    const dropdown = document.querySelector('.lang-dropdown');
+    const container = document.querySelector('.desktop-lang');
+    const btn = container?.querySelector('.lang-switcher-btn');
+    const dropdown = container?.querySelector('.lang-dropdown');
     
     if (btn && dropdown) {
       btn.addEventListener('click', (e) => {
@@ -90,7 +114,8 @@ const currentUrl = Astro.url.href;
 </script>
 
 <style>
-  .lang-switcher-container {
+  /* Desktop Dropdown */
+  .desktop-lang {
     position: relative;
     display: inline-block;
   }
@@ -126,7 +151,7 @@ const currentUrl = Astro.url.href;
     transition: transform 0.25s ease;
   }
   
-  .lang-switcher-container.open .chevron {
+  .desktop-lang.open .chevron {
     transform: rotate(180deg);
   }
   
@@ -148,7 +173,7 @@ const currentUrl = Astro.url.href;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   }
   
-  .lang-switcher-container.open .lang-dropdown {
+  .desktop-lang.open .lang-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -183,5 +208,51 @@ const currentUrl = Astro.url.href;
   .lang-option .label {
     font-size: 0.875rem;
     font-weight: 500;
+  }
+
+  /* Mobile Separate Buttons */
+  .mobile-lang {
+    display: none;
+    gap: 0.375rem;
+  }
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.375rem;
+    color: #d1d5db;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .lang-btn:hover {
+    background: rgba(147, 86, 93, 0.2);
+    border-color: rgba(147, 86, 93, 0.5);
+    color: #fff;
+  }
+  
+  .lang-btn.active {
+    background: rgba(147, 86, 93, 0.3);
+    border-color: rgba(147, 86, 93, 0.5);
+    color: #fff;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .desktop-lang {
+      display: none;
+    }
+    
+    .mobile-lang {
+      display: flex;
+    }
   }
 </style>
