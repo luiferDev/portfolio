@@ -77,6 +77,25 @@ Mi pasión es transformar ideas en productos digitales que generan valor real. S
     footer: {
       tagline: 'Creando experiencias digitales con código y creatividad',
       rights: 'Todos los derechos reservados.',
+      contact: 'Contacto',
+    },
+    contact: {
+      title: 'Contáctame',
+      subtitle: '¿Tienes un proyecto en mente? Escríbeme y hablemos.',
+      form: {
+        name: 'Nombre',
+        namePlaceholder: 'Tu nombre',
+        lastname: 'Apellido',
+        lastnamePlaceholder: 'Tu apellido',
+        email: 'Correo electrónico',
+        emailPlaceholder: 'tu@email.com',
+        message: 'Mensaje',
+        messagePlaceholder: 'Cuéntame sobre tu proyecto...',
+        submit: 'Enviar mensaje',
+        sending: 'Enviando...',
+        success: '¡Mensaje enviado! Te responderé pronto.',
+        error: 'Error al enviar el mensaje. Por favor intenta de nuevo.',
+      },
     },
     certs: {
       java: 'Desarrollador Backend Java',
@@ -146,6 +165,25 @@ My passion is turning ideas into digital products that deliver real value. I'm a
     footer: {
       tagline: 'Building digital experiences with code and creativity',
       rights: 'All rights reserved.',
+      contact: 'Contact',
+    },
+    contact: {
+      title: 'Contact Me',
+      subtitle: 'Have a project in mind? Write to me and let\'s talk.',
+      form: {
+        name: 'Name',
+        namePlaceholder: 'Your name',
+        lastname: 'Last Name',
+        lastnamePlaceholder: 'Your last name',
+        email: 'Email',
+        emailPlaceholder: 'your@email.com',
+        message: 'Message',
+        messagePlaceholder: 'Tell me about your project...',
+        submit: 'Send Message',
+        sending: 'Sending...',
+        success: 'Message sent! I will reply soon.',
+        error: 'Error sending message. Please try again.',
+      },
     },
     certs: {
       java: 'Java Backend Developer',
@@ -215,6 +253,25 @@ Ma passion est de transformer des idées en produits numériques qui génèrent 
     footer: {
       tagline: 'Créer des expériences numériques avec du code et de la créativité',
       rights: 'Tous droits réservés.',
+      contact: 'Contact',
+    },
+    contact: {
+      title: 'Me Contacter',
+      subtitle: 'Vous avez un projet en tête? Écrivez-moi et parlons-en.',
+      form: {
+        name: 'Prénom',
+        namePlaceholder: 'Votre prénom',
+        lastname: 'Nom',
+        lastnamePlaceholder: 'Votre nom',
+        email: 'Email',
+        emailPlaceholder: 'votre@email.com',
+        message: 'Message',
+        messagePlaceholder: 'Parlez-moi de votre projet...',
+        submit: 'Envoyer le message',
+        sending: 'Envoi en cours...',
+        success: 'Message envoyé! Je répondrai bientôt.',
+        error: "Erreur lors de l'envoi. Veuillez réessayer.",
+      },
     },
     certs: {
       java: 'Développeur Backend Java',

@@ -160,7 +160,7 @@ The project enables strict TypeScript. Common rules:
 - **astro-icon**: Icon component
 - **sharp**: Image optimization
 - **@iconify-json/***: Icon sets (devicon, mdi, simple-icons)
-- **gsap**: Animation library (install: `bun add gsap`, loaded via CDN in Layout)
+- **gsap**: Animation library (loaded as ES module in Layout.astro, NOT CDN)
 
 ---
 

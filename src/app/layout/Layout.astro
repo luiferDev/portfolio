@@ -4,6 +4,7 @@ import Navbar from '../../widgets/navbar/Navbar.astro';
 //import { ClientRouter } from 'astro:transitions';
 import { languages, defaultLang } from '../../shared/config/i18n';
 import '../../shared/lib/sentry';
+import '../../../src/styles/global.css';
 
 interface Props {
 	title?: string;
@@ -69,9 +70,18 @@ const locales = Object.keys(languages);
 		<!-- View Transitions disabled - GSAP compatibility issues -->
 		<!-- <ClientRouter /> -->
 		
-		<!-- GSAP for animations -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+		<!-- GSAP for animations - Load from local public files -->
+		<script src="/gsap/gsap.min.js" defer></script>
+		<script src="/gsap/ScrollTrigger.min.js" defer></script>
+		<script is:inline>
+			// Register ScrollTrigger once GSAP is loaded
+			document.addEventListener('DOMContentLoaded', () => {
+				if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+					gsap.registerPlugin(ScrollTrigger);
+					window.dispatchEvent(new Event('gsap-ready'));
+				}
+			});
+		</script>
 	</head>
 	<body>
 		<div class="bg-orbs" aria-hidden="true">

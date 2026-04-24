@@ -68,40 +68,40 @@ const certifications: Certification[] = [
 </section>
 
 <script is:inline>
-	// Wait for gsap to be available (loaded via CDN in Layout)
-	const checkGSAP = () => {
-		if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-			setTimeout(checkGSAP, 50);
-			return;
-		}
+  // Wait for gsap to be available (loaded via CDN in Layout)
+  const initCertificationsAnimations = () => {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initCertificationsAnimations, 50);
+      return;
+    }
 
-		gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger);
 
-		const cards = document.querySelectorAll('.cert-card');
+    const cards = document.querySelectorAll('.cert-card');
 
-		gsap.fromTo(
-			cards,
-			{ opacity: 0, y: 60 },
-			{
-				opacity: 1,
-				y: 0,
-				duration: 0.8,
-				stagger: 0.15,
-				ease: 'power3.out',
-				scrollTrigger: {
-					trigger: '.certifications-grid',
-					start: 'top 80%',
-					toggleActions: 'play none none reverse',
-				},
-			}
-		);
-	};
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: 60 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.certifications-grid',
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        },
+      }
+    );
+  };
 
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', checkGSAP);
-	} else {
-		checkGSAP();
-	}
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCertificationsAnimations);
+  } else {
+    initCertificationsAnimations();
+  }
 </script>
 
 <style>

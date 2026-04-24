@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import luiferdev from '../../../public/luiferdev.jpg';
-import { useTranslations } from '../../shared/config/i18n';
+import { useTranslations, defaultLang } from '../../shared/config/i18n';
 
 interface Props {
   locale?: string;
@@ -9,6 +9,9 @@ interface Props {
 
 const { locale = 'es' } = Astro.props;
 const t = useTranslations(locale as 'es' | 'en' | 'fr');
+
+// Build localized contact URL
+const contactUrl = locale === defaultLang ? '/contact' : `/${locale}/contact`;
 ---
 
 <section class="hero" id="hero">
@@ -20,7 +23,7 @@ const t = useTranslations(locale as 'es' | 'en' | 'fr');
 			<p class="hero-tagline">{t.hero.tagline}</p>
 			<div class="hero-cta">
 				<a href="#projects" class="btn-primary">{t.hero.cta1}</a>
-				<a href="#contact" class="btn-secondary">{t.hero.cta2}</a>
+				<a href={contactUrl} class="btn-secondary">{t.hero.cta2}</a>
 			</div>
 		</div>
 		<div class="hero-image-container">
