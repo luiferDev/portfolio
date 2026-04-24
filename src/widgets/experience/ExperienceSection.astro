@@ -30,8 +30,9 @@ const sortedExperiences = [...experiences].sort((a, b) => {
 });
 ---
 
-<section aria-label="experience section of my resume" class="experience max-w-[750px] mx-auto" id="experience">
-	<h2 class="section-title">{t.experience.title}</h2>
+<section aria-label="experience min-h-full py-[2rem] px-4 relative  section of my resume" class="experience max-w-[750px] mx-auto" id="experience">
+  <h2 class="text-[clamp(2rem,5vw,2.5rem)] from-white text-center font-bold mb-6 font-title">{t.experience.title}</h2>
+
 	
 	<div class="timeline">
 		<div class="timeline-track">
@@ -102,7 +103,7 @@ const sortedExperiences = [...experiences].sort((a, b) => {
 				
 				// El reloj baja por el timeline
 				gsap.fromTo(clock, 
-					{ y: -50 },
+					{ y: 6 },
 					{ 
 						y: trackHeight - 40,
 						ease: 'none',
@@ -117,30 +118,30 @@ const sortedExperiences = [...experiences].sort((a, b) => {
 				
 				// Manecilla HORA (grande): gira MUY rápido -1080° (3 vueltas completas)
 				// La más grande y rápida
-				gsap.to({}, {
+				gsap.to('.hour-hand', {
 					scrollTrigger: {
 						trigger: '.experience',
 						start: 'top center',
 						end: 'bottom center',
 						scrub: 1,
 						onUpdate: (self) => {
-							const hourRotation = -1080 * self.progress;
-							hourHandGroup.style.transform = `rotate(${hourRotation}deg)`;
-							hourHandGroup.style.transformOrigin = '30px 30px';
+              const hourRotation = -8640 * self.progress;
+              hourHandGroup.style.transform = `rotate(${hourRotation}deg)`;
+              hourHandGroup.style.transformOrigin = '30px 30px';
 						}
 					}
 				});
 				
 				// Manecilla MINUTO (chica): gira más lento -180° (media vuelta)
 				// La más pequeña y lenta
-				gsap.to({}, {
+        gsap.to( '.minute-hand', {
 					scrollTrigger: {
 						trigger: '.experience',
 						start: 'top center',
 						end: 'bottom center',
 						scrub: 1,
 						onUpdate: (self) => {
-							const minuteRotation = -180 * self.progress;
+							const minuteRotation = -360 * self.progress;
 							minuteHandGroup.style.transform = `rotate(${minuteRotation}deg)`;
 							minuteHandGroup.style.transformOrigin = '30px 30px';
 						}
@@ -165,20 +166,6 @@ const sortedExperiences = [...experiences].sort((a, b) => {
 </script>
 
 <style>
-	.experience {
-		min-height: 100vh;
-		padding: 2rem 1rem;
-		position: relative;
-	}
-
-	.section-title {
-		font-family: 'Space Grotesk', sans-serif;
-		font-size: clamp(2rem, 5vw, 2.5rem);
-		font-weight: 700;
-		color: #fff;
-		text-align: center;
-		margin: 0 0 1.5rem 0;
-	}
 
 	.timeline {
 		position: relative;
@@ -239,12 +226,12 @@ const sortedExperiences = [...experiences].sort((a, b) => {
 	}
 
 	.hour-hand-group .clock-hand {
-		stroke-width: 3.5;
+    stroke-width: 3.5;
+    opacity: 0.6;
 	}
 
 	.minute-hand-group .clock-hand {
-		stroke-width: 1.5;
-		opacity: 0.6;
+		stroke-width: 2.5;
 	}
 
 	.clock-center {
